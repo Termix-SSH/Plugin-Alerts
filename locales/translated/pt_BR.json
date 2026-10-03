@@ -14,7 +14,7 @@
   },
   "settings": {
     "group": {
-      "general": "General",
+      "general": "Geral",
       "email": "Email"
     },
     "admin": {
@@ -60,7 +60,7 @@
         "all": "All alerts",
         "warning": "Warnings and critical",
         "critical": "Critical only",
-        "off": "None"
+        "off": "Nenhum"
       }
     }
   },
@@ -72,7 +72,7 @@
   "severity": {
     "info": "Info",
     "success": "Success",
-    "warning": "Warning",
+    "warning": "Atenção",
     "critical": "Critical"
   },
   "inbox": {
@@ -85,7 +85,7 @@
     "markRead": "Mark as read",
     "markUnread": "Mark as unread",
     "markAllRead": "Mark all as read",
-    "delete": "Delete",
+    "delete": "Apagar",
     "clearRead": "Delete read alerts",
     "cleared_one": "Deleted {{count}} alert",
     "cleared_other": "Deleted {{count}} alerts",
@@ -112,7 +112,7 @@
     "needsSave": "This channel needs to be opened and saved again before it can send.",
     "name": "Name",
     "nameRequired": "Name is required",
-    "type": "Type",
+    "type": "Tipo",
     "types": {
       "webhook": "Webhook",
       "ntfy": "ntfy",
@@ -125,7 +125,7 @@
     "method": "Method",
     "headers": "Headers",
     "headersHint": "One per line, like Name: value.",
-    "ntfyServer": "Server URL",
+    "ntfyServer": "URL do Servidor",
     "ntfyTopic": "Topic",
     "ntfyToken": "Access token (optional)",
     "discordUrl": "Discord webhook URL",
@@ -156,10 +156,10 @@
     "summary": "{{match}}, {{severity}} or higher, to {{channels}}"
   },
   "actions": {
-    "cancel": "Cancel",
-    "save": "Save",
-    "saving": "Saving...",
-    "delete": "Delete"
+    "cancel": "Cancelar",
+    "save": "Salvar",
+    "saving": "Salvando...",
+    "delete": "Apagar"
   },
   "widget": {
     "name": "Alert Feed",
@@ -167,9 +167,6 @@
     "maxItems": "Max items",
     "showRead": "Show read alerts",
     "allClear": "All clear",
-    "loading": "Loading..."
-  },
-  "plugin": {
-    "name": "Alerts"
+    "loading": "Carregando..."
   }
 }

@@ -1,6 +1,6 @@
 {
   "nav": {
-    "alerts": "Alerts"
+    "alerts": "警示"
   },
   "permissions": {
     "use": {
@@ -9,13 +9,13 @@
     }
   },
   "onboarding": {
-    "feature": "Alerts",
+    "feature": "警示",
     "featureDesc": "Every alert in one inbox, sent on to Discord, ntfy, email or a webhook if you want."
   },
   "settings": {
     "group": {
-      "general": "General",
-      "email": "Email"
+      "general": "一般",
+      "email": "電子郵件"
     },
     "admin": {
       "announcements": {
@@ -60,36 +60,36 @@
         "all": "All alerts",
         "warning": "Warnings and critical",
         "critical": "Critical only",
-        "off": "None"
+        "off": "取消全選"
       }
     }
   },
   "sections": {
     "inbox": "Inbox",
-    "channels": "Channels",
+    "channels": "通道",
     "rules": "Delivery rules"
   },
   "severity": {
-    "info": "Info",
-    "success": "Success",
-    "warning": "Warning",
+    "info": "資訊",
+    "success": "成功",
+    "warning": "警告",
     "critical": "Critical"
   },
   "inbox": {
     "sourceTermix": "Termix",
-    "openLink": "Open",
-    "view": "View",
+    "openLink": "開啟",
+    "view": "檢視",
     "unread": "Unread",
     "deliveryFailed_one": "{{count}} channel failed",
     "deliveryFailed_other": "{{count}} channels failed",
     "markRead": "Mark as read",
     "markUnread": "Mark as unread",
     "markAllRead": "Mark all as read",
-    "delete": "Delete",
+    "delete": "刪除",
     "clearRead": "Delete read alerts",
     "cleared_one": "Deleted {{count}} alert",
     "cleared_other": "Deleted {{count}} alerts",
-    "filterAll": "All",
+    "filterAll": "全選",
     "filterUnread": "Unread",
     "anySeverity": "Any severity",
     "anySource": "Any source",
@@ -108,16 +108,16 @@
     "deleteConfirm": "Delete the channel \"{{name}}\"?",
     "deleted": "Channel deleted",
     "empty": "No channels yet.",
-    "enabled": "Enabled",
+    "enabled": "已啟用",
     "needsSave": "This channel needs to be opened and saved again before it can send.",
-    "name": "Name",
-    "nameRequired": "Name is required",
-    "type": "Type",
+    "name": "名稱",
+    "nameRequired": "名稱為必填",
+    "type": "類型",
     "types": {
       "webhook": "Webhook",
       "ntfy": "ntfy",
       "discord": "Discord",
-      "email": "Email"
+      "email": "電子郵件"
     },
     "emailUnavailable": "Email needs an SMTP server, which an admin sets up in the Alerts settings.",
     "webhookUrl": "URL",
@@ -125,8 +125,8 @@
     "method": "Method",
     "headers": "Headers",
     "headersHint": "One per line, like Name: value.",
-    "ntfyServer": "Server URL",
-    "ntfyTopic": "Topic",
+    "ntfyServer": "伺服器 URL",
+    "ntfyTopic": "主題",
     "ntfyToken": "Access token (optional)",
     "discordUrl": "Discord webhook URL",
     "discordHint": "From the channel's settings in Discord, under Integrations.",
@@ -143,9 +143,9 @@
     "edit": "Edit rule",
     "empty": "No rules yet, so alerts only show up in the inbox.",
     "needChannel": "Add a channel first.",
-    "enabled": "Enabled",
-    "name": "Name",
-    "nameRequired": "Name is required",
+    "enabled": "已啟用",
+    "name": "名稱",
+    "nameRequired": "名稱為必填",
     "match": "Alerts to send",
     "matchHint": "* for everything, automations.* for everything from automations, or one exact kind.",
     "minSeverity": "At least",
@@ -156,20 +156,17 @@
     "summary": "{{match}}, {{severity}} or higher, to {{channels}}"
   },
   "actions": {
-    "cancel": "Cancel",
-    "save": "Save",
-    "saving": "Saving...",
-    "delete": "Delete"
+    "cancel": "取消",
+    "save": "儲存",
+    "saving": "儲存中…",
+    "delete": "刪除"
   },
   "widget": {
-    "name": "Alert Feed",
+    "name": "警報動態",
     "description": "Your latest alerts, with a quick way to mark them read",
     "maxItems": "Max items",
     "showRead": "Show read alerts",
-    "allClear": "All clear",
-    "loading": "Loading..."
-  },
-  "plugin": {
-    "name": "Alerts"
+    "allClear": "一切正常",
+    "loading": "載入中..."
   }
 }

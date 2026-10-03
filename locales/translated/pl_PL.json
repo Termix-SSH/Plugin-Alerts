@@ -1,6 +1,6 @@
 {
   "nav": {
-    "alerts": "Alerts"
+    "alerts": "Alerty"
   },
   "permissions": {
     "use": {
@@ -9,13 +9,13 @@
     }
   },
   "onboarding": {
-    "feature": "Alerts",
+    "feature": "Alerty",
     "featureDesc": "Every alert in one inbox, sent on to Discord, ntfy, email or a webhook if you want."
   },
   "settings": {
     "group": {
-      "general": "General",
-      "email": "Email"
+      "general": "Ogólne",
+      "email": "E-mail"
     },
     "admin": {
       "announcements": {
@@ -60,36 +60,36 @@
         "all": "All alerts",
         "warning": "Warnings and critical",
         "critical": "Critical only",
-        "off": "None"
+        "off": "Żaden"
       }
     }
   },
   "sections": {
     "inbox": "Inbox",
-    "channels": "Channels",
+    "channels": "Kanały",
     "rules": "Delivery rules"
   },
   "severity": {
-    "info": "Info",
-    "success": "Success",
-    "warning": "Warning",
+    "info": "Informacje",
+    "success": "Powodzenie",
+    "warning": "Ostrzeżenie",
     "critical": "Critical"
   },
   "inbox": {
     "sourceTermix": "Termix",
-    "openLink": "Open",
-    "view": "View",
+    "openLink": "Otwórz",
+    "view": "Podgląd",
     "unread": "Unread",
     "deliveryFailed_one": "{{count}} channel failed",
     "deliveryFailed_other": "{{count}} channels failed",
     "markRead": "Mark as read",
     "markUnread": "Mark as unread",
     "markAllRead": "Mark all as read",
-    "delete": "Delete",
+    "delete": "Usuń",
     "clearRead": "Delete read alerts",
     "cleared_one": "Deleted {{count}} alert",
     "cleared_other": "Deleted {{count}} alerts",
-    "filterAll": "All",
+    "filterAll": "Wszystkie",
     "filterUnread": "Unread",
     "anySeverity": "Any severity",
     "anySource": "Any source",
@@ -106,27 +106,27 @@
     "testSent": "Test alert sent",
     "testFailed": "Test failed: {{error}}",
     "deleteConfirm": "Delete the channel \"{{name}}\"?",
-    "deleted": "Channel deleted",
+    "deleted": "Kanał usunięty",
     "empty": "No channels yet.",
-    "enabled": "Enabled",
+    "enabled": "Włączona",
     "needsSave": "This channel needs to be opened and saved again before it can send.",
-    "name": "Name",
-    "nameRequired": "Name is required",
-    "type": "Type",
+    "name": "Nazwa",
+    "nameRequired": "Nazwa jest wymagana",
+    "type": "Typ",
     "types": {
       "webhook": "Webhook",
       "ntfy": "ntfy",
       "discord": "Discord",
-      "email": "Email"
+      "email": "E-mail"
     },
     "emailUnavailable": "Email needs an SMTP server, which an admin sets up in the Alerts settings.",
-    "webhookUrl": "URL",
+    "webhookUrl": "Adres URL",
     "webhookHint": "Gets a JSON body for every alert.",
-    "method": "Method",
+    "method": "Metoda",
     "headers": "Headers",
     "headersHint": "One per line, like Name: value.",
-    "ntfyServer": "Server URL",
-    "ntfyTopic": "Topic",
+    "ntfyServer": "Adres URL serwera",
+    "ntfyTopic": "Temat",
     "ntfyToken": "Access token (optional)",
     "discordUrl": "Discord webhook URL",
     "discordHint": "From the channel's settings in Discord, under Integrations.",
@@ -143,9 +143,9 @@
     "edit": "Edit rule",
     "empty": "No rules yet, so alerts only show up in the inbox.",
     "needChannel": "Add a channel first.",
-    "enabled": "Enabled",
-    "name": "Name",
-    "nameRequired": "Name is required",
+    "enabled": "Włączona",
+    "name": "Nazwa",
+    "nameRequired": "Nazwa jest wymagana",
     "match": "Alerts to send",
     "matchHint": "* for everything, automations.* for everything from automations, or one exact kind.",
     "minSeverity": "At least",
@@ -156,20 +156,17 @@
     "summary": "{{match}}, {{severity}} or higher, to {{channels}}"
   },
   "actions": {
-    "cancel": "Cancel",
-    "save": "Save",
-    "saving": "Saving...",
-    "delete": "Delete"
+    "cancel": "Anuluj",
+    "save": "Zapisz",
+    "saving": "Zapisywanie...",
+    "delete": "Usuń"
   },
   "widget": {
-    "name": "Alert Feed",
+    "name": "Kanał alertów",
     "description": "Your latest alerts, with a quick way to mark them read",
     "maxItems": "Max items",
     "showRead": "Show read alerts",
-    "allClear": "All clear",
-    "loading": "Loading..."
-  },
-  "plugin": {
-    "name": "Alerts"
+    "allClear": "Bez alertów",
+    "loading": "Ładowanie..."
   }
 }
