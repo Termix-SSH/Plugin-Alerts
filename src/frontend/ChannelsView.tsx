@@ -9,7 +9,7 @@ import {
   Trash2,
 } from "lucide-react";
 import { useTranslation } from "@termix/plugin-sdk/frontend";
-import { Badge, Button, Switch, useConfirmation } from "@termix/plugin-sdk/ui";
+import { Badge, Button, Switch, useConfirm } from "@termix/plugin-sdk/ui";
 import type { ChannelSummary } from "../types";
 import type { AlertsApi } from "./api";
 import { ChannelDialog } from "./ChannelDialog";
@@ -22,7 +22,7 @@ export function ChannelsView({
   onChanged?: () => void;
 }) {
   const { t } = useTranslation();
-  const { confirmWithToast } = useConfirmation();
+  const confirm = useConfirm();
   const [channels, setChannels] = useState<ChannelSummary[]>([]);
   const [loading, setLoading] = useState(true);
   const [emailAvailable, setEmailAvailable] = useState(false);
@@ -76,21 +76,24 @@ export function ChannelsView({
   };
 
   const remove = (channel: ChannelSummary) => {
-    void confirmWithToast(
-      t("channels.deleteConfirm", { name: channel.name }),
-      async () => {
-        try {
-          await api.deleteChannel(channel.id);
-          toast.success(t("channels.deleted"));
-          await load();
-          onChanged?.();
-        } catch (error) {
-          toast.error(error instanceof Error ? error.message : String(error));
-        }
-      },
-      t("actions.delete"),
-      t("actions.cancel"),
-    );
+    void confirm({
+      title: t("channels.deleteConfirm", { name: channel.name }),
+      confirmLabel: t("actions.delete"),
+      cancelLabel: t("actions.cancel"),
+    }).then((ok) => {
+      if (ok)
+        void (async () => {
+          try {
+            await api.deleteChannel(channel.id);
+            toast.success(t("channels.deleted"));
+            await load();
+            onChanged?.();
+          } catch (error) {
+            toast.error(error instanceof Error ? error.message : String(error));
+          }
+        })();
+      return ok;
+    });
   };
 
   return (

@@ -30,7 +30,7 @@ function SeverityIcon({ severity }: { severity: AlertItem["severity"] }) {
   if (severity === "critical")
     return <AlertCircle size={11} className="shrink-0 text-red-500" />;
   if (severity === "warning")
-    return <AlertTriangle size={11} className="shrink-0 text-amber-500" />;
+    return <AlertTriangle size={11} className="shrink-0 text-warning" />;
   if (severity === "success")
     return <CheckCircle size={11} className="shrink-0 text-green-500" />;
   return <Info size={11} className="shrink-0 text-blue-400" />;

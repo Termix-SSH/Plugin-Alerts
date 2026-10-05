@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { fireEvent, waitFor } from "@testing-library/react";
+import { fireEvent, screen, waitFor, within } from "@testing-library/react";
 import type { PluginApiClient } from "@termix/plugin-sdk/frontend";
 import {
   renderWithApp,
@@ -142,6 +142,8 @@ describe("the alerts panel", () => {
       expect(panel.textContent).toContain("Certificate renewal failed"),
     );
     fireEvent.click(panel.querySelectorAll('[aria-label="Delete"]')[0]);
+    const prompt = await screen.findByRole("alertdialog");
+    fireEvent.click(within(prompt).getByRole("button", { name: "Delete" }));
     await waitFor(() => expect(calls).toContainEqual(["DELETE", "/items/2"]));
     await waitFor(() =>
       expect(panel.textContent).not.toContain("Certificate renewal failed"),

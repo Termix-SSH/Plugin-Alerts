@@ -23,7 +23,7 @@ const SEVERITY_ICON: Record<Severity, typeof Info> = {
 const SEVERITY_CLASS: Record<Severity, string> = {
   info: "text-muted-foreground",
   success: "text-green-500",
-  warning: "text-amber-500",
+  warning: "text-warning",
   critical: "text-destructive",
 };
 

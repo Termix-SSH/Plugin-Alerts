@@ -5,11 +5,6 @@ import { useTranslation } from "@termix/plugin-sdk/frontend";
 import {
   Button,
   Checkbox,
-  Dialog,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
   Input,
   Select,
   SelectContent,
@@ -17,7 +12,8 @@ import {
   SelectTrigger,
   SelectValue,
   Switch,
-  useConfirmation,
+  useConfirm,
+  InlineView,
 } from "@termix/plugin-sdk/ui";
 import {
   SEVERITIES,
@@ -37,7 +33,7 @@ const EMPTY: RuleInput = {
 
 export function RulesView({ api }: { api: AlertsApi }) {
   const { t } = useTranslation();
-  const { confirmWithToast } = useConfirmation();
+  const confirm = useConfirm();
   const [rules, setRules] = useState<AlertRule[]>([]);
   const [channels, setChannels] = useState<ChannelSummary[]>([]);
   const [categories, setCategories] = useState<string[]>([]);
@@ -129,19 +125,22 @@ export function RulesView({ api }: { api: AlertsApi }) {
   };
 
   const remove = (rule: AlertRule) => {
-    void confirmWithToast(
-      t("rules.deleteConfirm", { name: rule.name }),
-      async () => {
-        try {
-          await api.deleteRule(rule.id);
-          await load();
-        } catch (error) {
-          toast.error(error instanceof Error ? error.message : String(error));
-        }
-      },
-      t("actions.delete"),
-      t("actions.cancel"),
-    );
+    void confirm({
+      title: t("rules.deleteConfirm", { name: rule.name }),
+      confirmLabel: t("actions.delete"),
+      cancelLabel: t("actions.cancel"),
+    }).then((ok) => {
+      if (ok)
+        void (async () => {
+          try {
+            await api.deleteRule(rule.id);
+            await load();
+          } catch (error) {
+            toast.error(error instanceof Error ? error.message : String(error));
+          }
+        })();
+      return ok;
+    });
   };
 
   const toggleChannel = (id: number, checked: boolean) =>
@@ -221,99 +220,12 @@ export function RulesView({ api }: { api: AlertsApi }) {
         </div>
       )}
 
-      <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-        <DialogContent className="max-w-md rounded-none">
-          <DialogHeader>
-            <DialogTitle>
-              {editing ? t("rules.edit") : t("rules.add")}
-            </DialogTitle>
-          </DialogHeader>
-          <div className="flex flex-col gap-3 py-2">
-            <div className="flex flex-col gap-1">
-              <label className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">
-                {t("rules.name")}
-              </label>
-              <Input
-                value={draft.name}
-                onChange={(event) =>
-                  setDraft({ ...draft, name: event.target.value })
-                }
-                className="text-sm rounded-none"
-              />
-            </div>
-            <div className="flex flex-col gap-1">
-              <label className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">
-                {t("rules.match")}
-              </label>
-              <Input
-                value={draft.match}
-                list="alerts-rule-categories"
-                onChange={(event) =>
-                  setDraft({ ...draft, match: event.target.value })
-                }
-                placeholder="*"
-                className="text-sm font-mono rounded-none"
-              />
-              <datalist id="alerts-rule-categories">
-                <option value="*" />
-                {categories.map((category) => (
-                  <option key={category} value={category} />
-                ))}
-              </datalist>
-              <span className="text-[10px] text-muted-foreground">
-                {t("rules.matchHint")}
-              </span>
-            </div>
-            <div className="flex flex-col gap-1">
-              <label className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">
-                {t("rules.minSeverity")}
-              </label>
-              <Select
-                value={draft.minSeverity}
-                onValueChange={(value) =>
-                  setDraft({ ...draft, minSeverity: value as Severity })
-                }
-              >
-                <SelectTrigger className="h-8 rounded-none text-sm">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {SEVERITIES.filter((value) => value !== "success").map(
-                    (value) => (
-                      <SelectItem key={value} value={value}>
-                        {t(`severity.${value}`)}
-                      </SelectItem>
-                    ),
-                  )}
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="flex flex-col gap-1">
-              <label className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">
-                {t("rules.channels")}
-              </label>
-              <div className="flex flex-col gap-1.5 border border-border p-2 max-h-40 overflow-y-auto">
-                {channels.map((channel) => (
-                  <label
-                    key={channel.id}
-                    className="flex items-center gap-2 text-sm cursor-pointer"
-                  >
-                    <Checkbox
-                      checked={draft.channelIds.includes(channel.id)}
-                      onCheckedChange={(checked) =>
-                        toggleChannel(channel.id, checked === true)
-                      }
-                    />
-                    <span className="truncate">{channel.name}</span>
-                    <span className="text-[10px] uppercase text-muted-foreground">
-                      {t(`channels.types.${channel.type}`)}
-                    </span>
-                  </label>
-                ))}
-              </div>
-            </div>
-          </div>
-          <DialogFooter>
+      <InlineView
+        open={dialogOpen}
+        onOpenChange={setDialogOpen}
+        title={editing ? t("rules.edit") : t("rules.add")}
+        footer={
+          <div className="ml-auto flex flex-wrap items-center justify-end gap-2">
             <Button
               variant="ghost"
               className="rounded-none"
@@ -329,9 +241,95 @@ export function RulesView({ api }: { api: AlertsApi }) {
             >
               {saving ? t("actions.saving") : t("actions.save")}
             </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+          </div>
+        }
+      >
+        <div className="flex flex-col gap-3 py-2">
+          <div className="flex flex-col gap-1">
+            <label className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">
+              {t("rules.name")}
+            </label>
+            <Input
+              value={draft.name}
+              onChange={(event) =>
+                setDraft({ ...draft, name: event.target.value })
+              }
+              className="text-sm rounded-none"
+            />
+          </div>
+          <div className="flex flex-col gap-1">
+            <label className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">
+              {t("rules.match")}
+            </label>
+            <Input
+              value={draft.match}
+              list="alerts-rule-categories"
+              onChange={(event) =>
+                setDraft({ ...draft, match: event.target.value })
+              }
+              placeholder="*"
+              className="text-sm font-mono rounded-none"
+            />
+            <datalist id="alerts-rule-categories">
+              <option value="*" />
+              {categories.map((category) => (
+                <option key={category} value={category} />
+              ))}
+            </datalist>
+            <span className="text-[10px] text-muted-foreground">
+              {t("rules.matchHint")}
+            </span>
+          </div>
+          <div className="flex flex-col gap-1">
+            <label className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">
+              {t("rules.minSeverity")}
+            </label>
+            <Select
+              value={draft.minSeverity}
+              onValueChange={(value) =>
+                setDraft({ ...draft, minSeverity: value as Severity })
+              }
+            >
+              <SelectTrigger className="h-8 rounded-none text-sm">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {SEVERITIES.filter((value) => value !== "success").map(
+                  (value) => (
+                    <SelectItem key={value} value={value}>
+                      {t(`severity.${value}`)}
+                    </SelectItem>
+                  ),
+                )}
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="flex flex-col gap-1">
+            <label className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">
+              {t("rules.channels")}
+            </label>
+            <div className="flex flex-col gap-1.5 border border-border p-2 max-h-40 overflow-y-auto">
+              {channels.map((channel) => (
+                <label
+                  key={channel.id}
+                  className="flex items-center gap-2 text-sm cursor-pointer"
+                >
+                  <Checkbox
+                    checked={draft.channelIds.includes(channel.id)}
+                    onCheckedChange={(checked) =>
+                      toggleChannel(channel.id, checked === true)
+                    }
+                  />
+                  <span className="truncate">{channel.name}</span>
+                  <span className="text-[10px] uppercase text-muted-foreground">
+                    {t(`channels.types.${channel.type}`)}
+                  </span>
+                </label>
+              ))}
+            </div>
+          </div>
+        </div>
+      </InlineView>
     </div>
   );
 }

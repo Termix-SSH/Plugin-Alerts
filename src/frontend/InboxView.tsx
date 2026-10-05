@@ -13,7 +13,9 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
+  PanelSearch,
   cn,
+  useConfirm,
 } from "@termix/plugin-sdk/ui";
 import { SEVERITIES, type AlertItem, type Severity } from "../types";
 import { createAlertsApi } from "./api";
@@ -45,6 +47,8 @@ export function InboxView({
   const [severity, setSeverity] = useState<Severity | "">("");
   const [source, setSource] = useState("");
   const [sources, setSources] = useState<string[]>([]);
+  const [query, setQuery] = useState("");
+  const confirm = useConfirm();
   const pageSize = compact ? 25 : 50;
 
   const load = useCallback(async () => {
@@ -118,6 +122,11 @@ export function InboxView({
   };
 
   const remove = async (item: AlertItem) => {
+    const ok = await confirm({
+      title: t("inbox.deleteConfirm", { title: item.title }),
+      confirmLabel: t("inbox.delete"),
+    });
+    if (!ok) return;
     try {
       await api.remove(item.id);
       setItems((current) => current.filter((entry) => entry.id !== item.id));
@@ -128,6 +137,11 @@ export function InboxView({
   };
 
   const clearRead = async () => {
+    const ok = await confirm({
+      title: t("inbox.clearReadConfirm"),
+      confirmLabel: t("inbox.delete"),
+    });
+    if (!ok) return;
     try {
       const { removed } = await api.clear(true);
       toast.success(t("inbox.cleared", { count: removed }));
@@ -138,6 +152,15 @@ export function InboxView({
   };
 
   const unread = items.some((item) => !item.readAt);
+  const q = query.trim().toLowerCase();
+  const shown = q
+    ? items.filter(
+        (item) =>
+          item.title.toLowerCase().includes(q) ||
+          (item.body ?? "").toLowerCase().includes(q) ||
+          sourceLabel(item.source, t).toLowerCase().includes(q),
+      )
+    : items;
 
   return (
     <div className="flex flex-col flex-1 min-h-0">
@@ -202,7 +225,13 @@ export function InboxView({
             </Select>
           </>
         )}
-        <span className="flex-1" />
+        <PanelSearch
+          value={query}
+          onChange={setQuery}
+          placeholder={t("inbox.search")}
+          fill={compact}
+          className={compact ? undefined : "ml-auto"}
+        />
         <Button
           variant="ghost"
           size="icon"
@@ -245,17 +274,21 @@ export function InboxView({
           <div className="flex justify-center p-6">
             <Loader2 className="size-4 animate-spin text-muted-foreground" />
           </div>
-        ) : items.length === 0 ? (
+        ) : shown.length === 0 ? (
           <div className="flex flex-col items-center gap-2 p-8 text-center text-muted-foreground">
             <BellOff className="size-6" />
             <p className="text-sm">
-              {unreadOnly ? t("inbox.emptyUnread") : t("inbox.empty")}
+              {q
+                ? t("inbox.noMatches")
+                : unreadOnly
+                  ? t("inbox.emptyUnread")
+                  : t("inbox.empty")}
             </p>
           </div>
         ) : (
           <>
             <AlertList
-              items={items}
+              items={shown}
               compact={compact}
               onOpen={open}
               onToggleRead={(item) =>

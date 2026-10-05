@@ -96,7 +96,11 @@
     "openAll": "Open in a tab",
     "empty": "No alerts yet.",
     "emptyUnread": "You are all caught up.",
-    "loadMore": "Load more"
+    "loadMore": "Load more",
+    "deleteConfirm": "Delete the alert {{title}}?",
+    "clearReadConfirm": "Delete every read alert?",
+    "search": "Search alerts",
+    "noMatches": "No alerts match your search."
   },
   "channels": {
     "intro": "Channels are where alerts can go outside Termix. Delivery rules pick which alerts use them.",
