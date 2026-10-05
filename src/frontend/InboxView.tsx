@@ -5,7 +5,7 @@ import {
   usePluginApi,
   useTabs,
   useTranslation,
-} from "@termix/plugin-sdk/frontend";
+} from "@termix-ssh/plugin-sdk/frontend";
 import {
   Button,
   Select,
@@ -16,7 +16,7 @@ import {
   PanelSearch,
   cn,
   useConfirm,
-} from "@termix/plugin-sdk/ui";
+} from "@termix-ssh/plugin-sdk/ui";
 import { SEVERITIES, type AlertItem, type Severity } from "../types";
 import { createAlertsApi } from "./api";
 import { AlertList } from "./AlertList";

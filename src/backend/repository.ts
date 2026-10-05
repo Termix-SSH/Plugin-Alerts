@@ -8,7 +8,7 @@ import {
   lt,
   sql,
 } from "drizzle-orm";
-import type { PluginDatabase, PluginSecrets } from "@termix/plugin-sdk/backend";
+import type { PluginDatabase, PluginSecrets } from "@termix-ssh/plugin-sdk/backend";
 import {
   CHANNEL_TYPES,
   isSeverity,

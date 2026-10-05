@@ -4,7 +4,7 @@ import type {
   PanelProps,
   TabProps,
   TermixApp,
-} from "@termix/plugin-sdk/frontend";
+} from "@termix-ssh/plugin-sdk/frontend";
 import { AlertToaster } from "./AlertToaster";
 import { AlertsView } from "./AlertsView";
 import { createSectionRequests } from "./sections";

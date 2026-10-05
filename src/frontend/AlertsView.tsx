@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Bell, Radio, Route } from "lucide-react";
-import { usePluginApi, useTranslation } from "@termix/plugin-sdk/frontend";
-import { cn } from "@termix/plugin-sdk/ui";
+import { usePluginApi, useTranslation } from "@termix-ssh/plugin-sdk/frontend";
+import { cn } from "@termix-ssh/plugin-sdk/ui";
 import { createAlertsApi } from "./api";
 import { ChannelsView } from "./ChannelsView";
 import { InboxView } from "./InboxView";

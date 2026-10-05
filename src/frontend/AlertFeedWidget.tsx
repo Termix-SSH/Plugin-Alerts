@@ -7,8 +7,8 @@ import {
   CheckCircle,
   Info,
 } from "lucide-react";
-import { useTranslation } from "@termix/plugin-sdk/frontend";
-import { Input } from "@termix/plugin-sdk/ui";
+import { useTranslation } from "@termix-ssh/plugin-sdk/frontend";
+import { Input } from "@termix-ssh/plugin-sdk/ui";
 import type { AlertItem } from "../types";
 import type { AlertsApi } from "./api";
 import { timeAgo } from "./format";

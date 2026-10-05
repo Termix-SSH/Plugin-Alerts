@@ -8,8 +8,8 @@ import {
   Send,
   Trash2,
 } from "lucide-react";
-import { useTranslation } from "@termix/plugin-sdk/frontend";
-import { Badge, Button, Switch, useConfirm } from "@termix/plugin-sdk/ui";
+import { useTranslation } from "@termix-ssh/plugin-sdk/frontend";
+import { Badge, Button, Switch, useConfirm } from "@termix-ssh/plugin-sdk/ui";
 import type { ChannelSummary } from "../types";
 import type { AlertsApi } from "./api";
 import { ChannelDialog } from "./ChannelDialog";

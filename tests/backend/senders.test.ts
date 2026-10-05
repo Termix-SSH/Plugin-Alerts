@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import type { PluginFetchInit } from "@termix/plugin-sdk/backend";
+import type { PluginFetchInit } from "@termix-ssh/plugin-sdk/backend";
 import {
   parseRecipients,
   sendToChannel,

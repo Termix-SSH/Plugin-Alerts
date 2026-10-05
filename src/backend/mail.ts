@@ -1,5 +1,5 @@
 import nodemailer from "nodemailer";
-import type { PluginContext } from "@termix/plugin-sdk/backend";
+import type { PluginContext } from "@termix-ssh/plugin-sdk/backend";
 import type { SendMail, SmtpSettings } from "./senders.js";
 
 const str = (value: unknown) => (typeof value === "string" ? value.trim() : "");

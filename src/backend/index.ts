@@ -1,5 +1,5 @@
 import type { Router } from "express";
-import type { PluginContext } from "@termix/plugin-sdk/backend";
+import type { PluginContext } from "@termix-ssh/plugin-sdk/backend";
 import { createAnnouncements, REFRESH_MS } from "./announcements.js";
 import { createHub } from "./hub.js";
 import { readSmtp, sendMail } from "./mail.js";

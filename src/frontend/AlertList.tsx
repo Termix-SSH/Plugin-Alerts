@@ -8,8 +8,8 @@ import {
   OctagonAlert,
   Trash2,
 } from "lucide-react";
-import { useTranslation } from "@termix/plugin-sdk/frontend";
-import { Button, cn } from "@termix/plugin-sdk/ui";
+import { useTranslation } from "@termix-ssh/plugin-sdk/frontend";
+import { Button, cn } from "@termix-ssh/plugin-sdk/ui";
 import type { AlertItem, Severity } from "../types";
 import { sourceLabel, timeAgo } from "./format";
 

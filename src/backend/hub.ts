@@ -2,7 +2,7 @@ import type {
   PluginNotification,
   PluginNotifyHub,
   PluginNotifyResult,
-} from "@termix/plugin-sdk/backend";
+} from "@termix-ssh/plugin-sdk/backend";
 import {
   isSeverity,
   matchesCategory,

@@ -1,4 +1,4 @@
-import type { PluginFetch } from "@termix/plugin-sdk/backend";
+import type { PluginFetch } from "@termix-ssh/plugin-sdk/backend";
 import type { AlertLink, ChannelType, Severity } from "../types.js";
 
 export interface OutgoingAlert {

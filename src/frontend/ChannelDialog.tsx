@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { useTranslation } from "@termix/plugin-sdk/frontend";
+import { useTranslation } from "@termix-ssh/plugin-sdk/frontend";
 import {
   Button,
   Input,
@@ -9,7 +9,7 @@ import {
   Textarea,
   cn,
   InlineView,
-} from "@termix/plugin-sdk/ui";
+} from "@termix-ssh/plugin-sdk/ui";
 import { CHANNEL_TYPES, type ChannelType } from "../types";
 import { EMPTY, configFrom, draftFrom, type Draft } from "./channel-config";
 import type { AlertsApi } from "./api";

@@ -4,7 +4,7 @@ import {
   useSettings,
   useTabs,
   useTranslation,
-} from "@termix/plugin-sdk/frontend";
+} from "@termix-ssh/plugin-sdk/frontend";
 import { shouldPopUp, type PopupLevel } from "./popups";
 import type { AlertsStore } from "./store";
 

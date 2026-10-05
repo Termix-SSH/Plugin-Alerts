@@ -8,7 +8,7 @@ import {
   text,
   timestamp,
   varchar,
-} from "@termix/plugin-sdk/db";
+} from "@termix-ssh/plugin-sdk/db";
 
 /**
  * Where a user's alerts go. The config holds webhook URLs, ntfy tokens and
