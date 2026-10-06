@@ -8,10 +8,6 @@
       "description": "Get alerts in the inbox and send them to your own channels."
     }
   },
-  "onboarding": {
-    "feature": "Alerts",
-    "featureDesc": "Every alert in one inbox, sent on to Discord, ntfy, email or a webhook if you want."
-  },
   "settings": {
     "group": {
       "general": "General",

@@ -102,11 +102,4 @@ export function activate(app: TermixApp): void {
     sections.request("channels");
     openTab();
   });
-
-  app.registerSlotContribution("onboarding.features", {
-    actionId: "alerts.feature",
-    titleKey: "onboarding.feature",
-    descriptionKey: "onboarding.featureDesc",
-    icon: Bell as ComponentType<{ className?: string }>,
-  });
 }
