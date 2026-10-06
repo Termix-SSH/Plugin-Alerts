@@ -4,12 +4,21 @@ import {
   AlertTriangle,
   Loader2,
   Pencil,
-  Plus,
   Send,
   Trash2,
+  Radio,
 } from "lucide-react";
 import { useTranslation } from "@termix-ssh/plugin-sdk/frontend";
-import { Badge, Button, Switch, useConfirm } from "@termix-ssh/plugin-sdk/ui";
+import {
+  Switch,
+  useConfirm,
+  AddButton,
+  EmptyState,
+  ListBadge,
+  ListRow,
+  ListRowAction,
+  PanelList,
+} from "@termix-ssh/plugin-sdk/ui";
 import type { ChannelSummary } from "../types";
 import type { AlertsApi } from "./api";
 import { ChannelDialog } from "./ChannelDialog";
@@ -97,98 +106,106 @@ export function ChannelsView({
   };
 
   return (
-    <div className="flex flex-col gap-2 p-3">
-      <p className="text-xs text-muted-foreground">{t("channels.intro")}</p>
-      <Button
-        size="sm"
-        variant="outline"
-        className="rounded-none self-start border-accent-brand/40 text-accent-brand hover:bg-accent-brand/10 hover:text-accent-brand"
-        onClick={() => {
-          setEditingId(null);
-          setDialogOpen(true);
-        }}
-      >
-        <Plus className="size-3.5 mr-1" />
-        {t("channels.add")}
-      </Button>
-
-      {loading ? (
-        <Loader2 className="size-4 animate-spin text-muted-foreground m-4" />
-      ) : channels.length === 0 ? (
-        <p className="text-xs text-muted-foreground py-4">
-          {t("channels.empty")}
+    <div className="flex min-h-0 flex-1 flex-col">
+      <div className="flex shrink-0 items-center gap-2 border-b border-border px-3 py-2">
+        <p className="min-w-0 flex-1 text-[11px] leading-snug text-muted-foreground">
+          {t("channels.intro")}
         </p>
-      ) : (
-        <div className="flex flex-col border border-border">
-          {channels.map((channel) => (
-            <div
-              key={channel.id}
-              className="flex items-center gap-2 px-3 py-2 border-b border-border last:border-b-0"
-            >
-              <Switch
-                checked={channel.enabled}
-                onCheckedChange={(checked) => void toggle(channel, checked)}
-                aria-label={t("channels.enabled")}
-              />
-              <span className="flex-1 min-w-0 text-sm truncate">
-                {channel.name}
-              </span>
-              {!channel.usable && (
-                <span
-                  className="text-destructive"
-                  title={t("channels.needsSave")}
-                >
-                  <AlertTriangle className="size-3.5" />
-                </span>
-              )}
-              <Badge
-                variant="outline"
-                className="rounded-none text-[10px] uppercase"
-              >
-                {t(`channels.types.${channel.type}`)}
-              </Badge>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="h-7 w-7 rounded-none"
-                title={t("channels.test")}
-                aria-label={t("channels.test")}
-                disabled={testing === channel.id}
-                onClick={() => void test(channel)}
-              >
-                {testing === channel.id ? (
-                  <Loader2 className="size-3.5 animate-spin" />
-                ) : (
-                  <Send className="size-3.5" />
-                )}
-              </Button>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="h-7 w-7 rounded-none"
-                title={t("channels.edit")}
-                aria-label={t("channels.edit")}
-                onClick={() => {
-                  setEditingId(channel.id);
-                  setDialogOpen(true);
-                }}
-              >
-                <Pencil className="size-3.5" />
-              </Button>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="h-7 w-7 rounded-none"
-                title={t("actions.delete")}
-                aria-label={t("actions.delete")}
-                onClick={() => remove(channel)}
-              >
-                <Trash2 className="size-3.5" />
-              </Button>
+        <AddButton
+          label={t("channels.add")}
+          onClick={() => {
+            setEditingId(null);
+            setDialogOpen(true);
+          }}
+        />
+      </div>
+
+      <PanelList
+        empty={
+          loading ? (
+            <div className="flex justify-center p-6">
+              <Loader2 className="size-4 animate-spin text-muted-foreground" />
             </div>
+          ) : (
+            <EmptyState icon={Radio} title={t("channels.empty")} />
+          )
+        }
+      >
+        {!loading &&
+          channels.map((channel, index) => (
+            <ListRow
+              key={channel.id}
+              stripe={index}
+              tone={
+                !channel.usable
+                  ? "destructive"
+                  : channel.enabled
+                    ? "brand"
+                    : "muted"
+              }
+              dimmed={!channel.enabled}
+              title={channel.name}
+              onClick={() => {
+                setEditingId(channel.id);
+                setDialogOpen(true);
+              }}
+              badges={
+                <>
+                  {!channel.usable && (
+                    <ListBadge tone="destructive">
+                      <AlertTriangle />
+                      {t("channels.needsSave")}
+                    </ListBadge>
+                  )}
+                  <ListBadge className="ml-auto">
+                    {t(`channels.types.${channel.type}`)}
+                  </ListBadge>
+                </>
+              }
+              trailing={
+                <span onClick={(e) => e.stopPropagation()}>
+                  <Switch
+                    checked={channel.enabled}
+                    onCheckedChange={(checked) => void toggle(channel, checked)}
+                    aria-label={t("channels.enabled")}
+                  />
+                </span>
+              }
+              actions={
+                <>
+                  <ListRowAction
+                    label={t("channels.test")}
+                    tone="brand"
+                    disabled={testing === channel.id}
+                    onClick={() => void test(channel)}
+                  >
+                    {testing === channel.id ? (
+                      <Loader2 className="animate-spin" />
+                    ) : (
+                      <Send />
+                    )}
+                  </ListRowAction>
+                  <ListRowAction
+                    label={t("channels.edit")}
+                    onClick={() => {
+                      setEditingId(channel.id);
+                      setDialogOpen(true);
+                    }}
+                  >
+                    <Pencil />
+                  </ListRowAction>
+                  <ListRowAction
+                    label={t("actions.delete")}
+                    tone="destructive"
+                    onClick={() => remove(channel)}
+                  >
+                    <Trash2 />
+                  </ListRowAction>
+                </>
+              }
+            />
           ))}
-        </div>
-      )}
+      </PanelList>
 
       <ChannelDialog
         api={api}

@@ -16,6 +16,8 @@ import {
   PanelSearch,
   cn,
   useConfirm,
+  EmptyState,
+  Segmented,
 } from "@termix-ssh/plugin-sdk/ui";
 import { SEVERITIES, type AlertItem, type Severity } from "../types";
 import { createAlertsApi } from "./api";
@@ -170,23 +172,14 @@ export function InboxView({
           compact ? "px-2 py-1.5" : "px-3 py-2",
         )}
       >
-        <div className="flex border border-border">
-          {[false, true].map((value) => (
-            <button
-              key={String(value)}
-              type="button"
-              onClick={() => setUnreadOnly(value)}
-              className={cn(
-                "px-2 py-1 text-xs font-medium transition-colors",
-                unreadOnly === value
-                  ? "bg-accent-brand/10 text-accent-brand"
-                  : "text-muted-foreground hover:text-foreground",
-              )}
-            >
-              {value ? t("inbox.filterUnread") : t("inbox.filterAll")}
-            </button>
-          ))}
-        </div>
+        <Segmented
+          value={unreadOnly ? "unread" : "all"}
+          onChange={(value) => setUnreadOnly(value === "unread")}
+          options={[
+            { value: "all", label: t("inbox.filterAll") },
+            { value: "unread", label: t("inbox.filterUnread") },
+          ]}
+        />
         {!compact && (
           <>
             <Select
@@ -195,7 +188,7 @@ export function InboxView({
                 setSeverity(value === ALL ? "" : (value as Severity))
               }
             >
-              <SelectTrigger className="h-7 w-[140px] rounded-none text-xs">
+              <SelectTrigger className="h-8 w-[140px] rounded-none text-xs">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -211,7 +204,7 @@ export function InboxView({
               value={source || ALL}
               onValueChange={(value) => setSource(value === ALL ? "" : value)}
             >
-              <SelectTrigger className="h-7 w-[160px] rounded-none text-xs">
+              <SelectTrigger className="h-8 w-[160px] rounded-none text-xs">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -233,9 +226,8 @@ export function InboxView({
           className={compact ? undefined : "ml-auto"}
         />
         <Button
-          variant="ghost"
+          variant="outline"
           size="icon"
-          className="h-7 w-7 rounded-none"
           disabled={!unread}
           title={t("inbox.markAllRead")}
           aria-label={t("inbox.markAllRead")}
@@ -245,9 +237,8 @@ export function InboxView({
         </Button>
         {!compact && (
           <Button
-            variant="ghost"
+            variant="outline"
             size="icon"
-            className="h-7 w-7 rounded-none"
             title={t("inbox.clearRead")}
             aria-label={t("inbox.clearRead")}
             onClick={() => void clearRead()}
@@ -257,9 +248,8 @@ export function InboxView({
         )}
         {onOpenAll && (
           <Button
-            variant="ghost"
+            variant="outline"
             size="icon"
-            className="h-7 w-7 rounded-none"
             title={t("inbox.openAll")}
             aria-label={t("inbox.openAll")}
             onClick={onOpenAll}
@@ -275,16 +265,16 @@ export function InboxView({
             <Loader2 className="size-4 animate-spin text-muted-foreground" />
           </div>
         ) : shown.length === 0 ? (
-          <div className="flex flex-col items-center gap-2 p-8 text-center text-muted-foreground">
-            <BellOff className="size-6" />
-            <p className="text-sm">
-              {q
+          <EmptyState
+            icon={BellOff}
+            title={
+              q
                 ? t("inbox.noMatches")
                 : unreadOnly
                   ? t("inbox.emptyUnread")
-                  : t("inbox.empty")}
-            </p>
-          </div>
+                  : t("inbox.empty")
+            }
+          />
         ) : (
           <>
             <AlertList

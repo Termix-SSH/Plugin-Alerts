@@ -1,9 +1,8 @@
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
-import { Loader2, Pencil, Plus, Trash2 } from "lucide-react";
+import { Loader2, Pencil, Trash2, Route } from "lucide-react";
 import { useTranslation } from "@termix-ssh/plugin-sdk/frontend";
 import {
-  Button,
   Checkbox,
   Input,
   Select,
@@ -14,6 +13,12 @@ import {
   Switch,
   useConfirm,
   InlineView,
+  AddButton,
+  EmptyState,
+  FormFooter,
+  ListRow,
+  ListRowAction,
+  PanelList,
 } from "@termix-ssh/plugin-sdk/ui";
 import {
   SEVERITIES,
@@ -152,96 +157,95 @@ export function RulesView({ api }: { api: AlertsApi }) {
     }));
 
   return (
-    <div className="flex flex-col gap-2 p-3">
-      <p className="text-xs text-muted-foreground">{t("rules.intro")}</p>
-      <Button
-        size="sm"
-        variant="outline"
-        className="rounded-none self-start border-accent-brand/40 text-accent-brand hover:bg-accent-brand/10 hover:text-accent-brand"
-        disabled={channels.length === 0}
-        title={channels.length === 0 ? t("rules.needChannel") : undefined}
-        onClick={() => openEditor(null)}
-      >
-        <Plus className="size-3.5 mr-1" />
-        {t("rules.add")}
-      </Button>
-
-      {loading ? (
-        <Loader2 className="size-4 animate-spin text-muted-foreground m-4" />
-      ) : rules.length === 0 ? (
-        <p className="text-xs text-muted-foreground py-4">
-          {channels.length === 0 ? t("rules.needChannel") : t("rules.empty")}
+    <div className="flex min-h-0 flex-1 flex-col">
+      <div className="flex shrink-0 items-center gap-2 border-b border-border px-3 py-2">
+        <p className="min-w-0 flex-1 text-[11px] leading-snug text-muted-foreground">
+          {t("rules.intro")}
         </p>
-      ) : (
-        <div className="flex flex-col border border-border">
-          {rules.map((rule) => (
-            <div
-              key={rule.id}
-              className="flex items-center gap-2 px-3 py-2 border-b border-border last:border-b-0"
-            >
-              <Switch
-                checked={rule.enabled}
-                onCheckedChange={(checked) => void toggle(rule, checked)}
-                aria-label={t("rules.enabled")}
-              />
-              <div className="flex-1 min-w-0">
-                <div className="text-sm truncate">{rule.name}</div>
-                <div className="text-[11px] text-muted-foreground truncate">
-                  {t("rules.summary", {
-                    match:
-                      rule.match === "*" ? t("rules.everything") : rule.match,
-                    severity: t(`severity.${rule.minSeverity}`),
-                    channels: rule.channelIds.map(channelName).join(", "),
-                  })}
-                </div>
-              </div>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="h-7 w-7 rounded-none"
-                title={t("rules.edit")}
-                aria-label={t("rules.edit")}
-                onClick={() => openEditor(rule)}
-              >
-                <Pencil className="size-3.5" />
-              </Button>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="h-7 w-7 rounded-none"
-                title={t("actions.delete")}
-                aria-label={t("actions.delete")}
-                onClick={() => remove(rule)}
-              >
-                <Trash2 className="size-3.5" />
-              </Button>
+        <AddButton
+          label={t("rules.add")}
+          disabled={channels.length === 0}
+          title={
+            channels.length === 0 ? t("rules.needChannel") : t("rules.add")
+          }
+          onClick={() => openEditor(null)}
+        />
+      </div>
+
+      <PanelList
+        empty={
+          loading ? (
+            <div className="flex justify-center p-6">
+              <Loader2 className="size-4 animate-spin text-muted-foreground" />
             </div>
+          ) : (
+            <EmptyState
+              icon={Route}
+              title={
+                channels.length === 0
+                  ? t("rules.needChannel")
+                  : t("rules.empty")
+              }
+            />
+          )
+        }
+      >
+        {!loading &&
+          rules.map((rule, index) => (
+            <ListRow
+              key={rule.id}
+              stripe={index}
+              tone={rule.enabled ? "brand" : "muted"}
+              dimmed={!rule.enabled}
+              title={rule.name}
+              onClick={() => openEditor(rule)}
+              meta={t("rules.summary", {
+                match: rule.match === "*" ? t("rules.everything") : rule.match,
+                severity: t(`severity.${rule.minSeverity}`),
+                channels: rule.channelIds.map(channelName).join(", "),
+              })}
+              trailing={
+                <span onClick={(e) => e.stopPropagation()}>
+                  <Switch
+                    checked={rule.enabled}
+                    onCheckedChange={(checked) => void toggle(rule, checked)}
+                    aria-label={t("rules.enabled")}
+                  />
+                </span>
+              }
+              actions={
+                <>
+                  <ListRowAction
+                    label={t("rules.edit")}
+                    onClick={() => openEditor(rule)}
+                  >
+                    <Pencil />
+                  </ListRowAction>
+                  <ListRowAction
+                    label={t("actions.delete")}
+                    tone="destructive"
+                    onClick={() => remove(rule)}
+                  >
+                    <Trash2 />
+                  </ListRowAction>
+                </>
+              }
+            />
           ))}
-        </div>
-      )}
+      </PanelList>
 
       <InlineView
         open={dialogOpen}
         onOpenChange={setDialogOpen}
         title={editing ? t("rules.edit") : t("rules.add")}
         footer={
-          <div className="ml-auto flex flex-wrap items-center justify-end gap-2">
-            <Button
-              variant="ghost"
-              className="rounded-none"
-              onClick={() => setDialogOpen(false)}
-            >
-              {t("actions.cancel")}
-            </Button>
-            <Button
-              variant="outline"
-              disabled={saving}
-              onClick={() => void save()}
-              className="rounded-none border-accent-brand/40 text-accent-brand hover:bg-accent-brand/10 hover:text-accent-brand"
-            >
-              {saving ? t("actions.saving") : t("actions.save")}
-            </Button>
-          </div>
+          <FormFooter
+            onCancel={() => setDialogOpen(false)}
+            cancelLabel={t("actions.cancel")}
+            onSave={() => void save()}
+            saveLabel={t("actions.save")}
+            saving={saving}
+          />
         }
       >
         <div className="flex flex-col gap-3 py-2">
@@ -254,7 +258,7 @@ export function RulesView({ api }: { api: AlertsApi }) {
               onChange={(event) =>
                 setDraft({ ...draft, name: event.target.value })
               }
-              className="text-sm rounded-none"
+              className="h-8 text-xs"
             />
           </div>
           <div className="flex flex-col gap-1">
@@ -268,7 +272,7 @@ export function RulesView({ api }: { api: AlertsApi }) {
                 setDraft({ ...draft, match: event.target.value })
               }
               placeholder="*"
-              className="text-sm font-mono rounded-none"
+              className="h-8 font-mono text-xs"
             />
             <datalist id="alerts-rule-categories">
               <option value="*" />
@@ -290,7 +294,7 @@ export function RulesView({ api }: { api: AlertsApi }) {
                 setDraft({ ...draft, minSeverity: value as Severity })
               }
             >
-              <SelectTrigger className="h-8 rounded-none text-sm">
+              <SelectTrigger className="h-8 rounded-none text-xs">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -308,11 +312,11 @@ export function RulesView({ api }: { api: AlertsApi }) {
             <label className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">
               {t("rules.channels")}
             </label>
-            <div className="flex flex-col gap-1.5 border border-border p-2 max-h-40 overflow-y-auto">
+            <div className="flex max-h-40 flex-col overflow-y-auto border border-border">
               {channels.map((channel) => (
                 <label
                   key={channel.id}
-                  className="flex items-center gap-2 text-sm cursor-pointer"
+                  className="flex cursor-pointer items-center gap-2 border-b border-border/60 px-2.5 py-1.5 text-xs last:border-0 hover:bg-muted/40"
                 >
                   <Checkbox
                     checked={draft.channelIds.includes(channel.id)}

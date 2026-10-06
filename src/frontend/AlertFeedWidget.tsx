@@ -8,7 +8,7 @@ import {
   Info,
 } from "lucide-react";
 import { useTranslation } from "@termix-ssh/plugin-sdk/frontend";
-import { Input } from "@termix-ssh/plugin-sdk/ui";
+import { Input, Checkbox } from "@termix-ssh/plugin-sdk/ui";
 import type { AlertItem } from "../types";
 import type { AlertsApi } from "./api";
 import { timeAgo } from "./format";
@@ -172,17 +172,15 @@ export function AlertFeedEditForm({
         />
       </div>
       <label className="flex items-center gap-2 text-xs text-muted-foreground cursor-pointer">
-        <input
-          type="checkbox"
+        <Checkbox
           checked={showsRead(config)}
-          onChange={(e) =>
+          onCheckedChange={(checked) =>
             onChange({
               ...config,
-              showRead: e.target.checked,
+              showRead: checked === true,
               showAcknowledged: undefined,
             })
           }
-          className="accent-accent-brand"
         />
         {t("widget.showRead")}
       </label>

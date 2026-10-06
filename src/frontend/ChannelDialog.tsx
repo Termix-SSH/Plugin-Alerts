@@ -2,13 +2,13 @@ import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { useTranslation } from "@termix-ssh/plugin-sdk/frontend";
 import {
-  Button,
   Input,
   PasswordInput,
   Switch,
   Textarea,
   cn,
   InlineView,
+  FormFooter,
 } from "@termix-ssh/plugin-sdk/ui";
 import { CHANNEL_TYPES, type ChannelType } from "../types";
 import { EMPTY, configFrom, draftFrom, type Draft } from "./channel-config";
@@ -115,23 +115,13 @@ export function ChannelDialog({
       onOpenChange={onOpenChange}
       title={channelId === null ? t("channels.add") : t("channels.edit")}
       footer={
-        <div className="ml-auto flex flex-wrap items-center justify-end gap-2">
-          <Button
-            variant="ghost"
-            className="rounded-none"
-            onClick={() => onOpenChange(false)}
-          >
-            {t("actions.cancel")}
-          </Button>
-          <Button
-            variant="outline"
-            onClick={() => void save()}
-            disabled={saving}
-            className="rounded-none border-accent-brand/40 text-accent-brand hover:bg-accent-brand/10 hover:text-accent-brand"
-          >
-            {saving ? t("actions.saving") : t("actions.save")}
-          </Button>
-        </div>
+        <FormFooter
+          onCancel={() => onOpenChange(false)}
+          cancelLabel={t("actions.cancel")}
+          onSave={() => void save()}
+          saveLabel={t("actions.save")}
+          saving={saving}
+        />
       }
     >
       <div className="flex flex-col gap-3 py-2">
