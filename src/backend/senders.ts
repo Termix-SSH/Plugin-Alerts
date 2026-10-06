@@ -60,7 +60,7 @@ const DISCORD_COLORS: Record<Severity, number> = {
   critical: 15158332,
 };
 
-export const DISCORD_WEBHOOK =
+const DISCORD_WEBHOOK =
   /^https:\/\/(?:canary\.|ptb\.)?(?:discord\.com|discordapp\.com)\/api\/webhooks\/.+/i;
 
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;

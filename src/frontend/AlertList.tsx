@@ -27,7 +27,7 @@ const SEVERITY_CLASS: Record<Severity, string> = {
   critical: "text-destructive",
 };
 
-export function SeverityIcon({
+function SeverityIcon({
   severity,
   className,
 }: {

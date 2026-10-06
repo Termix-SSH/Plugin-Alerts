@@ -9,7 +9,7 @@ import type { AlertsRepository } from "./repository.js";
 export const FEED_URL =
   "https://raw.githubusercontent.com/Termix-SSH/Docs/main/termix-alerts.json";
 export const REFRESH_MS = 30 * 60 * 1000;
-export const ANNOUNCEMENT_CATEGORY = "termix.announcement";
+const ANNOUNCEMENT_CATEGORY = "termix.announcement";
 
 /** One entry of termix-alerts.json, as the Docs repo publishes it. */
 export interface Announcement {
@@ -23,7 +23,7 @@ export interface Announcement {
   actionText?: string;
 }
 
-export function announcementSeverity(entry: Announcement): Severity {
+function announcementSeverity(entry: Announcement): Severity {
   if (entry.priority === "critical" || entry.type === "error") {
     return "critical";
   }
@@ -32,7 +32,7 @@ export function announcementSeverity(entry: Announcement): Severity {
   return "info";
 }
 
-export function parseFeed(raw: unknown, now = Date.now()): Announcement[] {
+function parseFeed(raw: unknown, now = Date.now()): Announcement[] {
   if (!Array.isArray(raw)) return [];
   return raw.filter((entry): entry is Announcement => {
     if (!entry || typeof entry !== "object") return false;

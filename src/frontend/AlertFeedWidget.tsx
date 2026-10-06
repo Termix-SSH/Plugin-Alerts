@@ -36,7 +36,7 @@ function SeverityIcon({ severity }: { severity: AlertItem["severity"] }) {
   return <Info size={11} className="shrink-0 text-blue-400" />;
 }
 
-export function showsRead(config: Partial<AlertFeedConfig>): boolean {
+function showsRead(config: Partial<AlertFeedConfig>): boolean {
   return config.showRead ?? config.showAcknowledged ?? false;
 }
 
