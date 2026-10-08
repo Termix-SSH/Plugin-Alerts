@@ -48,8 +48,7 @@
       "prettier --write"
     ],
     "announcements/*.md": [
-      "node scripts/announce.ts build",
-      "git add announcements.json"
+      "node scripts/announce.ts build"
     ]
   },
   "engines": {
