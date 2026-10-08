@@ -10,18 +10,6 @@ npm run validate   # check manifest.json
 npm run format     # format the code with Prettier
 ```
 
-## Settings
+## Docs
 
-### Admin
-
-- **Termix announcements:** show news from the Termix team in everyone's inbox
-- **Keep alerts for (days):** older alerts are removed from every inbox
-- **SMTP server, port, TLS, username, password and from address:** needed for email channels. Leave the server empty to turn email off
-
-### User
-
-- **Alert popups:** all alerts, warnings and critical, critical only, or none
-
-## Permissions
-
-- `alerts.use`: get alerts in the inbox and send them to your own channels. Admins and users have it by default.
+The docs for this plugin are in [docs/](docs/) and are published at https://docs.termix.site/plugins/alerts. Settings, permissions, services, environment variables and the API reference are made from `manifest.json` and the `@openapi` comments in the code, so keep those up to date instead of writing them by hand. See [writing docs](https://docs.termix.site/develop/docs).

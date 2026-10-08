@@ -14,6 +14,8 @@
 
 Alerts is the inbox every Termix alert lands in, with delivery to Discord, ntfy, email or a webhook.
 
+Read the [docs](https://docs.termix.site/plugins/alerts) to set it up and use it.
+
 <br />
 
 ## Features
