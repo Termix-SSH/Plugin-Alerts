@@ -6,3 +6,4 @@ package-lock.json
 
 locales/translated
 migrations/snapshot.json
+announcements.json

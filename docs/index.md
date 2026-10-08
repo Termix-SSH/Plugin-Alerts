@@ -49,7 +49,7 @@ An admin sets up the mail server in **Settings**, **Alerts**:
 
 ## Termix announcements
 
-With **Termix announcements** on, news from the Termix team, like security notices and new releases, shows up in everyone's inbox. Admins can turn it off.
+With **Termix announcements** on, news from the Termix team, like security notices and new releases, shows up in the inbox. You only get news from after you joined, so a new account starts with a clean inbox. Some come with buttons, and an important one can also show as a card on screen until you close it. Delete one and it won't come back. Admins can turn announcements off.
 
 ## Keeping alerts
 

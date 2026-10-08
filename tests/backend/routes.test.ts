@@ -335,29 +335,46 @@ describe("rules", () => {
 });
 
 describe("announcements", () => {
-  const future = new Date(Date.now() + 86_400_000).toISOString();
-  const past = new Date(Date.now() - 86_400_000).toISOString();
+  const day = 86_400_000;
+  const iso = (offset: number) => new Date(Date.now() + offset).toISOString();
+  const entry = (overrides: Record<string, unknown>) => ({
+    title: "Announcement",
+    body: "",
+    severity: "info",
+    date: iso(-day),
+    expires: null,
+    newUsers: false,
+    audience: "everyone",
+    display: "inbox",
+    actions: [],
+    ...overrides,
+  });
   const feed = [
-    {
-      id: "release-2-9",
-      title: "Termix 2.9 is out",
-      message: "Plugins are here.",
-      expiresAt: future,
-      type: "success",
-      actionUrl: "https://termix.site/blog",
-      actionText: "Read more",
-    },
-    {
-      id: "old",
-      title: "Gone",
-      message: "Expired",
-      expiresAt: past,
-    },
+    entry({
+      id: "plugins",
+      title: "Plugins are here",
+      body: "Try **them**.",
+      severity: "success",
+      display: "popup",
+      actions: [
+        { label: "Open settings", tab: "settings" },
+        { label: "Read more", url: "https://termix.site/blog" },
+        { label: "Discord", url: "https://discord.gg/termix" },
+      ],
+    }),
+    entry({ id: "old", title: "Expired", expires: iso(-1000) }),
+    entry({ id: "later", title: "Scheduled", date: iso(day) }),
+    entry({ id: "admins", title: "Admins only", audience: "admins" }),
+    entry({ id: "broken", title: "", severity: "loud" }),
   ];
   const respond = (url: string) =>
     url === FEED_URL ? Response.json(feed) : new Response("ok");
+  const titles = async (user = "alice") =>
+    (await server.request("GET", "/items", { user })).body.items.map(
+      (item: { title: string }) => item.title,
+    );
 
-  it("brings each live announcement into the inbox once", async () => {
+  it("brings each live announcement into the inbox once, with every button", async () => {
     server = await startServer({ respond });
 
     const first = await server.request("GET", "/items");
@@ -366,10 +383,18 @@ describe("announcements", () => {
         source: "termix",
         category: "termix.announcement",
         severity: "success",
-        title: "Termix 2.9 is out",
-        body: "Plugins are here.",
+        title: "Plugins are here",
+        body: "Try **them**.",
         link: { url: "https://termix.site/blog" },
-        context: { announcementId: "release-2-9", actionText: "Read more" },
+        context: {
+          announcementId: "plugins",
+          display: "popup",
+          actions: [
+            { label: "Open settings", tab: "settings" },
+            { label: "Read more", url: "https://termix.site/blog" },
+            { label: "Discord", url: "https://discord.gg/termix" },
+          ],
+        },
       }),
     ]);
 
@@ -377,6 +402,36 @@ describe("announcements", () => {
     const again = await server.request("GET", "/items");
     expect(again.body.items).toHaveLength(1);
     expect(again.body.unread).toBe(0);
+  });
+
+  it("skips ones published before the user signed up unless they ask for new users", async () => {
+    const signedUp = new Date(Date.now() - day / 2)
+      .toISOString()
+      .replace("T", " ")
+      .slice(0, 19);
+    server = await startServer({
+      users: [{ id: "alice" }, { id: "bob", registeredAt: signedUp }],
+      respond: (url) =>
+        url === FEED_URL
+          ? Response.json([
+              entry({ id: "before", title: "Before bob" }),
+              entry({ id: "everyone", title: "For everyone", newUsers: true }),
+              entry({ id: "after", title: "After bob", date: iso(-1000) }),
+            ])
+          : new Response("ok"),
+    });
+
+    expect((await titles("bob")).sort()).toEqual(["After bob", "For everyone"]);
+    expect(await titles("alice")).toHaveLength(3);
+  });
+
+  it("only gives admins the ones meant for admins", async () => {
+    server = await startServer({
+      users: [{ id: "alice", isAdmin: true }, { id: "bob" }],
+      respond,
+    });
+    expect(await titles("alice")).toContain("Admins only");
+    expect(await titles("bob")).not.toContain("Admins only");
   });
 
   it("never brings back one the user deleted", async () => {
@@ -388,7 +443,27 @@ describe("announcements", () => {
     expect((await server.request("GET", "/items")).body.items).toEqual([]);
     expect(
       server.db.sqlite.prepare("SELECT alert_id FROM p_alerts_dismissed").all(),
-    ).toEqual([{ alert_id: "release-2-9" }]);
+    ).toEqual([{ alert_id: "plugins" }]);
+  });
+
+  it("sends what it adds on connect down the stream, so the app can pop it up", async () => {
+    server = await startServer({ respond });
+    const controller = new AbortController();
+    const response = await fetch(`${server.url}/stream`, {
+      headers: { "x-test-user": "alice" },
+      signal: controller.signal,
+    });
+    const reader = response.body!.getReader();
+    const decoder = new TextDecoder();
+    let text = "";
+    while (!text.includes("Plugins are here")) {
+      const { value, done } = await reader.read();
+      if (done) break;
+      text += decoder.decode(value, { stream: true });
+    }
+    expect(text).toContain("event: item");
+    expect(text).toContain('"display":"popup"');
+    controller.abort();
   });
 
   it("shows none while an admin has them turned off", async () => {

@@ -46,6 +46,26 @@ const ITEMS = [
     readAt: "2026-01-01T00:00:00.000Z",
     createdAt: "2026-01-01T00:00:00.000Z",
   },
+  {
+    id: 3,
+    source: "termix",
+    category: "termix.announcement",
+    severity: "info",
+    title: "Plugins are here",
+    body: "Try the **new** tab.",
+    link: { url: "https://termix.site/blog" },
+    context: {
+      announcementId: "plugins",
+      display: "inbox",
+      actions: [
+        { label: "Open settings", tab: "settings" },
+        { label: "Read the post", url: "https://termix.site/blog" },
+      ],
+    },
+    deliveries: null,
+    readAt: null,
+    createdAt: "2026-01-02T00:00:00.000Z",
+  },
 ];
 
 function stubApi() {
@@ -129,6 +149,34 @@ describe("the alerts panel", () => {
         "POST",
         "/items/read",
         { ids: [2], read: true },
+      ]),
+    );
+  });
+
+  it("shows an announcement's buttons and Markdown body", async () => {
+    const { api, calls } = stubApi();
+    rendered = await renderWithApp(plugin, { manifest, locales, api });
+
+    const panel = rendered.renderPanel("alerts", { active: true });
+    await waitFor(() =>
+      expect(panel.textContent).toContain("Plugins are here"),
+    );
+    expect(panel.querySelector("strong")?.textContent).toBe("new");
+    const post = within(panel).getByRole("link", { name: /Read the post/ });
+    expect(post.getAttribute("href")).toBe("https://termix.site/blog");
+
+    fireEvent.click(
+      within(panel).getByRole("button", { name: "Open settings" }),
+    );
+    expect(rendered.shellCalls).toContainEqual({
+      method: "openSingletonTab",
+      args: ["settings"],
+    });
+    await waitFor(() =>
+      expect(calls).toContainEqual([
+        "POST",
+        "/items/read",
+        { ids: [3], read: true },
       ]),
     );
   });

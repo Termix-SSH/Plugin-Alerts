@@ -10,7 +10,10 @@
     "validate": "termix-plugin validate",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "prepare": "husky || true"
+    "prepare": "husky || true",
+    "announce": "node scripts/announce.ts new",
+    "announce:build": "node scripts/announce.ts build",
+    "announce:check": "node scripts/announce.ts check"
   },
   "dependencies": {
     "lucide-react": "^1.33.0",
@@ -30,7 +33,8 @@
     "jsdom": "^30.0.1",
     "lint-staged": "^17.2.0",
     "prettier": "3.9.9",
-    "vitest": "^4.1.11"
+    "vitest": "^4.1.11",
+    "yaml": "^2.9.1"
   },
   "peerDependencies": {
     "@termix-ssh/plugin-sdk": "^1.0.3",
@@ -42,6 +46,10 @@
   "lint-staged": {
     "*.{ts,tsx,js,jsx,mjs,cjs,json,css,md}": [
       "prettier --write"
+    ],
+    "announcements/*.md": [
+      "node scripts/announce.ts build",
+      "git add announcements.json"
     ]
   },
   "engines": {

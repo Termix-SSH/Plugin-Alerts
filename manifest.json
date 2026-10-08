@@ -23,6 +23,7 @@
     "api": "^1.2"
   },
   "capabilities": [
+    "db:core-refs",
     "db:own",
     "events:core",
     "network:outbound",

@@ -13,6 +13,7 @@ import type {
   PluginNotifyHub,
 } from "@termix-ssh/plugin-sdk/backend";
 import type { PluginManifest } from "@termix-ssh/plugin-sdk/manifest";
+import { buildRefTable } from "@termix-ssh/plugin-sdk/table-builder";
 import manifestJson from "../../manifest.json";
 
 export const pluginDir = fileURLToPath(new URL("../..", import.meta.url));
@@ -50,13 +51,33 @@ export async function startServer(
     settings?: Record<string, unknown>;
     coreSettings?: Record<string, string>;
     respond?: (url: string, init?: PluginFetchInit) => Response;
+    /** Who signed up when, in SQLite's CURRENT_TIMESTAMP form. */
+    users?: Array<{ id: string; registeredAt?: string; isAdmin?: boolean }>;
   } = {},
 ): Promise<TestServer> {
   const db = await createTestDb(pluginDir);
-  for (const user of ["alice", "bob"]) {
+  // The SDK's stand-in users table has no registered_at; core's does.
+  db.sqlite.exec("ALTER TABLE users ADD COLUMN registered_at TEXT");
+  const users = buildRefTable("users", {
+    id: "text",
+    username: "text",
+    isAdmin: "boolean",
+    registeredAt: "text",
+  });
+  const refs = db.database.refs;
+  db.database.refs = async () =>
+    ({ ...(await refs<Record<string, unknown>>()), users }) as never;
+  for (const user of options.users ?? [{ id: "alice" }, { id: "bob" }]) {
     db.sqlite
-      .prepare("INSERT INTO users (id, username) VALUES (?, ?)")
-      .run(user, user);
+      .prepare(
+        "INSERT INTO users (id, username, is_admin, registered_at) VALUES (?, ?, ?, ?)",
+      )
+      .run(
+        user.id,
+        user.id,
+        user.isAdmin ? 1 : 0,
+        user.registeredAt ?? "2026-01-01 00:00:00",
+      );
   }
 
   const fetches: FetchCall[] = [];

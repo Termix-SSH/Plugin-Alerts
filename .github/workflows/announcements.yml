@@ -1,0 +1,30 @@
+name: Announcements
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "announcements/**"
+      - "announcements.json"
+      - "scripts/announce.ts"
+      - "src/announcements-schema.ts"
+  pull_request:
+    paths:
+      - "announcements/**"
+      - "announcements.json"
+      - "scripts/announce.ts"
+      - "src/announcements-schema.ts"
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+      - run: npm ci --ignore-scripts
+      - run: npm run announce:check
