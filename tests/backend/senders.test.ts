@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
 import type { PluginFetchInit } from "@termix-ssh/plugin-sdk/backend";
 import {
+  describeSendError,
   parseRecipients,
   sendToChannel,
   validateChannelConfig,
@@ -209,5 +210,26 @@ describe("helpers", () => {
     });
     expect(cleanLink({ tab: "../../x", url: "file:///etc/passwd" })).toBeNull();
     expect(cleanLink("docker")).toBeNull();
+  });
+});
+
+describe("describeSendError", () => {
+  it("explains a blocked private address", () => {
+    const error = new TypeError("fetch failed", {
+      cause: new Error("Private destinations are not allowed"),
+    });
+    expect(describeSendError(error)).toMatch(/private network/);
+  });
+
+  it("shows the real reason behind fetch failed", () => {
+    const error = new TypeError("fetch failed", {
+      cause: new Error("getaddrinfo ENOTFOUND nope.invalid"),
+    });
+    expect(describeSendError(error)).toBe(
+      "Could not reach the address: getaddrinfo ENOTFOUND nope.invalid",
+    );
+    expect(describeSendError(new Error("HTTP 500 Server Error"))).toBe(
+      "HTTP 500 Server Error",
+    );
   });
 });
