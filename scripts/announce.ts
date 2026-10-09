@@ -4,7 +4,10 @@
  *   npm run announce -- "Title"   new file with today's date
  *   npm run announce:build        validate and write announcements.json
  *   npm run announce:check        fail if a file is invalid or the json is stale
+ *
+ * build --stage also stages announcements.json, for the pre-commit hook.
  */
+import { execFileSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -170,6 +173,9 @@ function main(args: string[]) {
     const text = serializeFeed(feed);
     if (command === "build") {
       fs.writeFileSync(FEED_FILE, text);
+      if (rest.includes("--stage")) {
+        execFileSync("git", ["add", FEED_FILE], { cwd: ROOT });
+      }
       console.log(`Wrote ${feed.length} announcement(s) to announcements.json`);
       return;
     }

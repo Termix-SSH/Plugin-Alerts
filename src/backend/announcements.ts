@@ -113,27 +113,22 @@ export function createAnnouncements(
   async function recipient(userId: string): Promise<Recipient | null> {
     if (recipients.has(userId)) return recipients.get(userId)!;
     let found: Recipient | null = null;
-    try {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const { users } = await ctx.db.refs<{ users: any }>();
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const drizzle = await ctx.db.client<any>();
-      const rows = await drizzle
-        .select({ registeredAt: users.registeredAt, isAdmin: users.isAdmin })
-        .from(users)
-        .where(eq(users.id, userId))
-        .limit(1);
-      if (rows[0]) {
-        found = {
-          registeredAt: parseTimestamp(rows[0].registeredAt),
-          isAdmin: Boolean(rows[0].isAdmin),
-        };
-      }
-    } catch (error) {
-      ctx.log.warn(
-        `Could not look up who an announcement is for: ${error instanceof Error ? error.message : String(error)}`,
-      );
-      return { registeredAt: null, isAdmin: false };
+    // A failed lookup throws, so the sync is skipped rather than handing the
+    // user every old announcement as if they had no signup date.
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { users } = await ctx.db.refs<{ users: any }>();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const drizzle = await ctx.db.client<any>();
+    const rows = await drizzle
+      .select({ registeredAt: users.registeredAt, isAdmin: users.isAdmin })
+      .from(users)
+      .where(eq(users.id, userId))
+      .limit(1);
+    if (rows[0]) {
+      found = {
+        registeredAt: parseTimestamp(rows[0].registeredAt),
+        isAdmin: Boolean(rows[0].isAdmin),
+      };
     }
     recipients.set(userId, found);
     return found;

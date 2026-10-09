@@ -160,7 +160,6 @@
   "actions": {
     "cancel": "Cancel",
     "save": "Save",
-    "saving": "Saving...",
     "delete": "Delete"
   },
   "widget": {

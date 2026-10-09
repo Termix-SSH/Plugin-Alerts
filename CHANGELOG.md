@@ -4,6 +4,7 @@
 
 ### Added
 
+- First release
 - One inbox for alerts from every part of Termix
 - Popups for new alerts
 - Send alerts to Discord, ntfy, email or a webhook

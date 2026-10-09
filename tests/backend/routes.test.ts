@@ -374,6 +374,14 @@ describe("announcements", () => {
       (item: { title: string }) => item.title,
     );
 
+  it("adds nothing when it cannot tell when the user signed up", async () => {
+    server = await startServer({ respond });
+    server.db.database.refs = async () => {
+      throw new Error("db down");
+    };
+    expect(await titles()).toEqual([]);
+  });
+
   it("brings each live announcement into the inbox once, with every button", async () => {
     server = await startServer({ respond });
 

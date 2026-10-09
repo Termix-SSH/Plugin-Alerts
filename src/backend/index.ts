@@ -76,6 +76,7 @@ export async function activate(ctx: PluginContext) {
 
   // Users with the app open get a new announcement without reloading.
   ctx.schedule.every(REFRESH_MS, async () => {
+    if ((await ctx.settings.get<boolean>("announcements")) === false) return;
     await announcements.refresh();
     for (const userId of stream.users()) await announcements.sync(userId);
   });

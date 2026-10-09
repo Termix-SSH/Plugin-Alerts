@@ -48,7 +48,7 @@
       "prettier --write"
     ],
     "announcements/*.md": [
-      "node scripts/announce.ts build"
+      "node scripts/announce.ts build --stage"
     ]
   },
   "engines": {

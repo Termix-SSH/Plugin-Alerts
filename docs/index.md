@@ -4,7 +4,7 @@ Other plugins send alerts. Alerts is where they land.
 
 ## The inbox
 
-Open **Alerts** from the sidebar. Each alert has a severity (info, warning or critical), where it came from and when. Filter by unread, severity or source, and search.
+Open **Alerts** from the sidebar. Each alert has a severity (info, success, warning or critical), where it came from and when. Filter by unread, severity or source, and search.
 
 New alerts also pop up while you use Termix. Pick which ones under **Alert popups** in **Settings**, **Alerts**: all, warnings and critical (the default), critical only, or none. They always land in the inbox either way.
 
