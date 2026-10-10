@@ -1,11 +1,5 @@
 # Changelog
 
-## 1.0.1
-
-### Fixed
-
-- A channel blocked for using a private address now says why instead of fetch failed
-
 ## 1.0.0
 
 ### Added
