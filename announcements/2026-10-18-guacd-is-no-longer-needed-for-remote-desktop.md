@@ -3,7 +3,7 @@ title: "guacd is no longer needed for Remote Desktop"
 # info, success, warning or critical
 severity: info
 # When it goes live. A future date waits until then.
-date: 2026-10-18T12:00:00Z
+date: 2026-10-18T06:30:00Z
 # Optional. A date, or how long after date: 12h, 7d, 2w
 expires: 4w
 # Users who sign up after date only get it when this is true.
