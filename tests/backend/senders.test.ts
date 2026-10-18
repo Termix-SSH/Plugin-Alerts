@@ -65,6 +65,34 @@ describe("sendToChannel", () => {
     ]);
   });
 
+  it("sends a non-ASCII ntfy title and link as ASCII headers", async () => {
+    const title = "Approval needed: Größe „x“ 🔔";
+    const body = "Größe „x“ überschritten… ✅";
+    const { deps: d, calls } = deps();
+    await sendToChannel(
+      { type: "ntfy", config: { url: "https://ntfy.sh", topic: "t" } },
+      { ...ALERT, title, body, link: { url: "https://termix.example/a?c=ä" } },
+      d,
+    );
+    const { headers } = calls[0].init!;
+    expect(headers).toMatchObject({
+      Title: `=?UTF-8?B?${Buffer.from(title).toString("base64")}?=`,
+      Click: "https://termix.example/a?c=%C3%A4",
+    });
+    expect(Object.values(headers!).join("")).toMatch(/^[\x20-\x7e]*$/);
+    expect(calls[0].init!.body).toBe(body);
+  });
+
+  it("encodes an ASCII ntfy title only when it looks encoded", async () => {
+    const { deps: d, calls } = deps();
+    await sendToChannel(
+      { type: "ntfy", config: { url: "https://ntfy.sh", topic: "t" } },
+      { ...ALERT, title: "=?x?=" },
+      d,
+    );
+    expect(calls[0].init!.headers!.Title).toBe("=?UTF-8?B?PT94Pz0=?=");
+  });
+
   it("posts a Discord embed", async () => {
     const { deps: d, calls } = deps();
     await sendToChannel(
