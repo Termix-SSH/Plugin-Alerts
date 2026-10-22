@@ -130,6 +130,35 @@ describe(`${manifest.id} activate`, () => {
   });
 });
 
+describe("the alerts dashboard card", () => {
+  it("shows the inbox to users who may use alerts", async () => {
+    const { api } = stubApi();
+    rendered = await renderWithApp(plugin, {
+      manifest,
+      locales,
+      api,
+      permissions: ["alerts.use"],
+    });
+    expect(rendered.registered.dashboardCards()).toEqual(["alerts-inbox"]);
+    const card = rendered.renderDashboardCard("alerts-inbox");
+    await waitFor(() =>
+      expect(card.textContent).toContain("Certificate renewal failed"),
+    );
+  });
+
+  it("shows a note without the permission", async () => {
+    const { api } = stubApi();
+    rendered = await renderWithApp(plugin, {
+      manifest,
+      locales,
+      api,
+      permissions: [],
+    });
+    const card = rendered.renderDashboardCard("alerts-inbox");
+    expect(card.textContent).toContain(locales.card.denied);
+  });
+});
+
 describe("the alerts panel", () => {
   it("lists alerts, flags a failed delivery and marks one read", async () => {
     const { api, calls } = stubApi();
