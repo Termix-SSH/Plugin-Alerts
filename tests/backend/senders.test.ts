@@ -261,3 +261,61 @@ describe("describeSendError", () => {
     );
   });
 });
+
+describe("telegram and webhook templates", () => {
+  it("posts a Telegram message to the bot API", async () => {
+    const { deps: d, calls } = deps();
+    await sendToChannel(
+      { type: "telegram", config: { token: "123:abc", chatId: "-100" } },
+      ALERT,
+      d,
+    );
+    expect(calls[0].url).toBe(
+      "https://api.telegram.org/bot123:abc/sendMessage",
+    );
+    const body = JSON.parse(String(calls[0].init?.body));
+    expect(body.chat_id).toBe("-100");
+    expect(body.text).toContain("Disk full");
+    expect(body.text).toContain("https://termix.example/hosts/1");
+  });
+
+  it("checks Telegram settings", () => {
+    expect(
+      validateChannelConfig("telegram", {
+        token: "123:abc",
+        chatId: "@ops_team",
+      }),
+    ).toBeNull();
+    expect(
+      validateChannelConfig("telegram", { token: "x", chatId: "1" }),
+    ).toMatch(/bot token/);
+  });
+
+  it("fills a webhook body template with escaped values", async () => {
+    const { deps: d, calls } = deps();
+    await sendToChannel(
+      {
+        type: "webhook",
+        config: {
+          url: "https://chat.example/hooks/x",
+          bodyTemplate: '{"text": "{{title}}: {{message}}", "who": "{{nope}}"}',
+        },
+      },
+      { ...ALERT, body: 'say "hi"' },
+      d,
+    );
+    expect(JSON.parse(String(calls[0].init?.body))).toEqual({
+      text: 'Disk full: say "hi"',
+      who: "",
+    });
+  });
+
+  it("refuses a template that is not JSON", () => {
+    expect(
+      validateChannelConfig("webhook", {
+        url: "https://x.example",
+        bodyTemplate: "{{title}",
+      }),
+    ).toMatch(/not valid JSON/);
+  });
+});
