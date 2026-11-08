@@ -31,6 +31,7 @@ Read the [docs](https://docs.termix.site/plugins/alerts) to set it up and use it
 - Send alerts to Discord, ntfy, email or a webhook
 - Rules that pick which alerts go where
 - Optional news from the Termix team, like security notices and releases
+- Send yourself an alert from rules, rollouts and the CLI, and see unread alerts as a status tile
 
 <br />
 
