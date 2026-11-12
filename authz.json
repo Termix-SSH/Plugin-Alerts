@@ -1,0 +1,170 @@
+{
+  "$schema": "https://raw.githubusercontent.com/Termix-SSH/Termix/main/scripts/authz/authz.schema.json",
+  "seed": [
+    {
+      "as": "owner",
+      "method": "POST",
+      "path": "/plugin-api/alerts/channels",
+      "body": {
+        "name": "authz-own-channel",
+        "type": "webhook",
+        "config": {
+          "url": "http://127.0.0.1:9/authz"
+        }
+      },
+      "capture": {
+        "alerts.channels": "id"
+      }
+    },
+    {
+      "as": "owner",
+      "method": "POST",
+      "path": "/plugin-api/alerts/rules",
+      "body": {
+        "name": "authz-own-rule",
+        "match": "*",
+        "minSeverity": "info",
+        "channelIds": ["{{alerts.channels}}"]
+      },
+      "capture": {
+        "alerts.rules": "id"
+      }
+    }
+  ],
+  "routes": {
+    "GET /plugin-api/alerts/categories": {
+      "access": "user",
+      "permission": "alerts.use"
+    },
+    "GET /plugin-api/alerts/channels": {
+      "access": "user",
+      "permission": "alerts.use"
+    },
+    "POST /plugin-api/alerts/channels": {
+      "access": "user",
+      "permission": "alerts.use"
+    },
+    "DELETE /plugin-api/alerts/channels/:id": {
+      "access": "user",
+      "permission": "alerts.use",
+      "resource": {
+        "kind": "own",
+        "fixture": "alerts.channels"
+      },
+      "params": {
+        "id": "alerts.channels"
+      },
+      "destructive": true
+    },
+    "GET /plugin-api/alerts/channels/:id": {
+      "access": "user",
+      "permission": "alerts.use",
+      "resource": {
+        "kind": "own",
+        "fixture": "alerts.channels"
+      },
+      "params": {
+        "id": "alerts.channels"
+      }
+    },
+    "PUT /plugin-api/alerts/channels/:id": {
+      "access": "user",
+      "permission": "alerts.use",
+      "resource": {
+        "kind": "own",
+        "fixture": "alerts.channels"
+      },
+      "params": {
+        "id": "alerts.channels"
+      }
+    },
+    "POST /plugin-api/alerts/channels/:id/test": {
+      "access": "user",
+      "permission": "alerts.use",
+      "resource": {
+        "kind": "own",
+        "fixture": "alerts.channels"
+      },
+      "params": {
+        "id": "alerts.channels"
+      }
+    },
+    "DELETE /plugin-api/alerts/items": {
+      "access": "user",
+      "permission": "alerts.use",
+      "destructive": true
+    },
+    "GET /plugin-api/alerts/items": {
+      "access": "user",
+      "permission": "alerts.use"
+    },
+    "DELETE /plugin-api/alerts/items/:id": {
+      "access": "user",
+      "permission": "alerts.use",
+      "resource": {
+        "kind": "own",
+        "fixture": "alerts.items"
+      },
+      "params": {
+        "id": "=authz-none"
+      },
+      "destructive": true,
+      "allowed": "any",
+      "note": "No items in the test data (alerts arrive from other plugins); only session, permission and unknown id refusals are checked"
+    },
+    "POST /plugin-api/alerts/items/read": {
+      "access": "user",
+      "permission": "alerts.use"
+    },
+    "GET /plugin-api/alerts/meta": {
+      "access": "user",
+      "permission": "alerts.use"
+    },
+    "GET /plugin-api/alerts/rules": {
+      "access": "user",
+      "permission": "alerts.use"
+    },
+    "POST /plugin-api/alerts/rules": {
+      "access": "user",
+      "permission": "alerts.use"
+    },
+    "DELETE /plugin-api/alerts/rules/:id": {
+      "access": "user",
+      "permission": "alerts.use",
+      "resource": {
+        "kind": "own",
+        "fixture": "alerts.rules"
+      },
+      "params": {
+        "id": "alerts.rules"
+      },
+      "destructive": true
+    },
+    "PUT /plugin-api/alerts/rules/:id": {
+      "access": "user",
+      "permission": "alerts.use",
+      "resource": {
+        "kind": "own",
+        "fixture": "alerts.rules"
+      },
+      "params": {
+        "id": "alerts.rules"
+      },
+      "body": {
+        "name": "authz-x",
+        "match": "*",
+        "minSeverity": "info",
+        "channelIds": ["{{alerts.channels}}"]
+      },
+      "refuse400": "The rule names the owner channel, which other users cannot use"
+    },
+    "GET /plugin-api/alerts/stream": {
+      "access": "user",
+      "permission": "alerts.use"
+    },
+    "GET /plugin-api/alerts/unread": {
+      "access": "user",
+      "permission": "alerts.use"
+    }
+  }
+}
