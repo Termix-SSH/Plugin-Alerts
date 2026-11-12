@@ -5,6 +5,7 @@
 ### Fixed
 
 - Updated nodemailer to a release with security fixes
+- Saved channel tokens, webhook URLs and header values stay on the server. Editing a channel shows them as saved, and leaving them empty keeps them
 
 ## 1.3.0
 

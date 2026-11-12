@@ -47,11 +47,13 @@ describe("channels", () => {
     expect(list.body[0].config).toBeUndefined();
 
     const detail = await server.request("GET", `/channels/${id}`);
+    // The token never goes back to the browser.
     expect(detail.body.config).toEqual({
       url: "https://ntfy.sh",
       topic: "ops",
-      token: "tk_1",
     });
+    expect(detail.body.saved).toEqual(["token"]);
+    expect(JSON.stringify(detail.body)).not.toContain("tk_1");
 
     // Stored sealed, never as plain JSON.
     const stored = server.db.sqlite
@@ -63,7 +65,19 @@ describe("channels", () => {
       body: { name: "night pager" },
     });
     expect(renamed.body).toMatchObject({ name: "night pager", type: "ntfy" });
-    expect(renamed.body.config.token).toBe("tk_1");
+    expect(renamed.body.config.token).toBeUndefined();
+    expect(renamed.body.saved).toEqual(["token"]);
+
+    // Sending the token empty keeps the saved one.
+    await server.request("PUT", `/channels/${id}`, {
+      body: { config: { url: "https://ntfy.sh", topic: "night", token: "" } },
+    });
+    const kept = server.db.sqlite
+      .prepare("SELECT config FROM p_alerts_channels WHERE id = ?")
+      .get(id) as { config: string };
+    expect(kept.config).not.toContain("tk_1");
+    const open = await server.request("POST", `/channels/${id}/test`);
+    expect(open.status).toBe(200);
 
     expect((await server.request("DELETE", `/channels/${id}`)).status).toBe(
       200,
