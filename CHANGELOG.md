@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.3.1
+
+### Fixed
+
+- Updated nodemailer to a release with security fixes
+
 ## 1.3.0
 
 ### Added
