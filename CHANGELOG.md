@@ -2,6 +2,10 @@
 
 ## 1.3.1
 
+### Changed
+
+- Runs in its own process on Termix 26.11.2 and later, with no access to the server beyond what Termix allows it
+
 ### Fixed
 
 - Updated nodemailer to a release with security fixes
