@@ -48,6 +48,21 @@ function isChannelType(value: unknown): value is ChannelType {
 }
 
 const INSTALL_ID = /^[A-Za-z0-9_-]{8,64}$/;
+
+const running = new Map<string, Promise<unknown>>();
+
+/** Runs jobs with the same key one after another. */
+function oneAtATime<T>(key: string, job: () => Promise<T>): Promise<T> {
+  const before = running.get(key) ?? Promise.resolve();
+  const next = before.catch(() => undefined).then(job);
+  running.set(key, next);
+  void next
+    .catch(() => undefined)
+    .finally(() => {
+      if (running.get(key) === next) running.delete(key);
+    });
+  return next;
+}
 const ACCOUNT_KEY = /^[A-Za-z0-9._:-]{1,64}$/;
 
 function idList(value: unknown): number[] {
@@ -861,47 +876,64 @@ export function registerRoutes(router: Router, deps: RouteDeps): void {
       : "warning";
     const enabled = body.enabled !== false;
 
-    const existing = await findDevice(userId, installId);
-    let channelId: number;
-    if (existing) {
-      channelId = existing.id;
-      config.ruleId = existing.config?.ruleId;
-      await repository.updateChannel(userId, channelId, {
-        name,
-        config,
-        enabled,
-      });
-    } else {
-      channelId = await repository.createChannel(userId, {
-        name,
-        type: "mobile",
-        config,
-        enabled,
-      });
-    }
+    // The app can send several at once; one at a time keeps one channel and rule.
+    const device = await oneAtATime(`${userId}:${installId}`, async () => {
+      const existing = await findDevice(userId, installId);
+      let channelId: number;
+      if (existing) {
+        channelId = existing.id;
+        config.ruleId = existing.config?.ruleId;
+        await repository.updateChannel(userId, channelId, {
+          name,
+          config,
+          enabled,
+        });
+      } else {
+        channelId = await repository.createChannel(userId, {
+          name,
+          type: "mobile",
+          config,
+          enabled,
+        });
+      }
 
-    const rule = (await rulesById(userId)).get(positiveInt(config.ruleId) ?? 0);
-    const ruleInput = {
-      name: `Mobile: ${name}`.slice(0, 100),
-      match: rule?.match ?? "*",
-      minSeverity,
-      channelIds: [channelId],
-      enabled: true,
-    };
-    if (rule) {
-      await repository.updateRule(userId, rule.id, ruleInput);
-    } else {
-      config.ruleId = await repository.createRule(userId, ruleInput);
-      await repository.updateChannel(userId, channelId, { config });
-    }
-    const device: MobileDevice = {
-      installId,
-      channelId,
-      name,
-      platform,
-      enabled,
-      minSeverity,
-    };
+      const rule = (await rulesById(userId)).get(
+        positiveInt(config.ruleId) ?? 0,
+      );
+      const ruleInput = {
+        name: `Mobile: ${name}`.slice(0, 100),
+        match: rule?.match ?? "*",
+        minSeverity,
+        channelIds: [channelId],
+        enabled: true,
+      };
+      if (rule) {
+        await repository.updateRule(userId, rule.id, ruleInput);
+      } else {
+        config.ruleId = await repository.createRule(userId, ruleInput);
+        await repository.updateChannel(userId, channelId, { config });
+      }
+      // Copies left by 1.4.0-beta.1, which could race.
+      for (const extra of await repository.listRules(userId)) {
+        if (
+          extra.id !== config.ruleId &&
+          extra.name.startsWith("Mobile: ") &&
+          extra.channelIds.length === 1 &&
+          extra.channelIds[0] === channelId
+        ) {
+          await repository.deleteRule(userId, extra.id);
+        }
+      }
+      const result: MobileDevice = {
+        installId,
+        channelId,
+        name,
+        platform,
+        enabled,
+        minSeverity,
+      };
+      return result;
+    });
     res.json(device);
   });
 

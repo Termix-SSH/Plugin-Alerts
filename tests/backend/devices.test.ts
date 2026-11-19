@@ -184,6 +184,47 @@ describe("devices", () => {
     ).not.toContain("mobile");
   });
 
+  it("keeps one channel and rule when the app links several times at once", async () => {
+    server = await startServer();
+    await Promise.all(
+      Array.from({ length: 5 }, () =>
+        server!.request("PUT", "/devices/install-0001", { body: PHONE }),
+      ),
+    );
+    expect((await server.request("GET", "/channels")).body).toHaveLength(1);
+    expect((await server.request("GET", "/rules")).body).toHaveLength(1);
+  });
+
+  it("removes copies of the phone's rule left by an earlier race", async () => {
+    server = await startServer();
+    const put = await server.request("PUT", "/devices/install-0001", {
+      body: PHONE,
+    });
+    for (let i = 0; i < 3; i++) {
+      await server.request("POST", "/rules", {
+        body: {
+          name: "Mobile: Pixel",
+          match: "*",
+          minSeverity: "warning",
+          channelIds: [put.body.channelId],
+        },
+      });
+    }
+    await server.request("POST", "/rules", {
+      body: {
+        name: "my own",
+        match: "*",
+        minSeverity: "info",
+        channelIds: [put.body.channelId],
+      },
+    });
+    await server.request("PUT", "/devices/install-0001", { body: PHONE });
+    const names = (await server.request("GET", "/rules")).body.map(
+      (rule: { name: string }) => rule.name,
+    );
+    expect(names.sort()).toEqual(["Mobile: Pixel", "my own"]);
+  });
+
   it("deleting the channel on the web removes its rule", async () => {
     server = await startServer();
     const put = await server.request("PUT", "/devices/install-0001", {
