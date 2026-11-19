@@ -137,7 +137,7 @@
     "webhookHint": "Za vsako opozorilo prejme telo v formatu JSON.",
     "method": "Metoda",
     "headers": "Glave",
-    "headersHint": "Po ena na vrstico, na primer Ime: vrednost. Shranjena vrednost je skrita; pustite prazno, če jo želite ohraniti.",
+    "headersHint": "Po ena na vrstico, na primer Ime: vrednost. Shranjena vrednost je skrita; pustite polje prazno, da jo ohranite.",
     "savedKeep": "Shranjeno. Pustite prazno, da ga ohranite",
     "savedUrl": "Shranjeno za {{origin}}. Pustite prazno, da ga ohranite",
     "bodyTemplate": "Predloga vsebine (izbirno)",

@@ -135,7 +135,7 @@
     "webhookHint": "Rep un cos JSON per a cada alerta.",
     "method": "Mètode",
     "headers": "Capçaleres",
-    "headersHint": "Un per línia, com Nom: valor. Un valor desat s'amaga; deixeu-lo buit per mantenir-lo.",
+    "headersHint": "Un per línia, com a Nom: valor. Un valor desat s'amaga; deixa'l buit per mantenir-lo.",
     "savedKeep": "Desat. Deixa'l buit per mantenir-lo",
     "savedUrl": "Desat per a {{origin}}. Deixa'l buit per mantenir-lo",
     "bodyTemplate": "Plantilla del cos (opcional)",

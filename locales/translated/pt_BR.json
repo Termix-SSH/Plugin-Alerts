@@ -135,7 +135,7 @@
     "webhookHint": "Recebe um corpo JSON para cada alerta.",
     "method": "Método",
     "headers": "Cabeçalhos",
-    "headersHint": "Um por linha, como Nome: valor. Um valor salvo fica oculto; deixe vazio para mantê-lo.",
+    "headersHint": "Um por linha, como Nome: valor. Um valor salvo fica oculto; deixe-o vazio para mantê-lo.",
     "savedKeep": "Salvo. Deixe vazio para mantê-lo",
     "savedUrl": "Salvo para {{origin}}. Deixe vazio para mantê-lo",
     "bodyTemplate": "Modelo do corpo (opcional)",

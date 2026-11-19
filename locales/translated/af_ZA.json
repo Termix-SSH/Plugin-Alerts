@@ -133,7 +133,7 @@
     "webhookHint": "Ontvang 'n JSON-liggaam vir elke waarskuwing.",
     "method": "Metode",
     "headers": "Koppe",
-    "headersHint": "Een per lyn, soos Naam: waarde. 'n Gestoorde waarde word versteek, laat dit leeg om dit te behou.",
+    "headersHint": "Een per lyn, soos Naam: waarde. ’n Opgewardeerde waarde word versteek; laat dit leeg om dit te behou.",
     "savedKeep": "Opgewardeer. Laat leeg om dit te behou",
     "savedUrl": "Opgewardeer vir {{origin}}. Laat leeg om dit te behou",
     "bodyTemplate": "Liggaamssjabloon (opsioneel)",

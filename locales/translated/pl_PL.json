@@ -137,7 +137,7 @@
     "webhookHint": "Otrzymuje ciało JSON dla każdego alertu.",
     "method": "Metoda",
     "headers": "Nagłówki",
-    "headersHint": "Po jednym wierszu, np. Nazwa: wartość. Zapisana wartość jest ukryta; pozostaw pole puste, aby ją zachować.",
+    "headersHint": "Po jednym w wierszu, np. Nazwa: wartość. Zapisana wartość jest ukryta; pozostaw pole puste, aby ją zachować.",
     "savedKeep": "Zapisano. Pozostaw puste, aby zachować.",
     "savedUrl": "Zapisano dla {{origin}}. Pozostaw puste, aby zachować.",
     "bodyTemplate": "Szablon treści (opcjonalnie)",

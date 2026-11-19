@@ -135,7 +135,7 @@
     "webhookHint": "Primește un corp JSON pentru fiecare alertă.",
     "method": "Metodă",
     "headers": "Antete",
-    "headersHint": "Câte unul pe linie, de exemplu Nume: valoare. O valoare salvată este ascunsă; lăsați câmpul gol pentru a o păstra.",
+    "headersHint": "Câte unul pe linie, de genul Nume: valoare. O valoare salvată este ascunsă; lăsați câmpul gol pentru a o păstra.",
     "savedKeep": "Salvat. Lăsați gol pentru a păstra.",
     "savedUrl": "Salvat pentru {{origin}}. Lăsați gol pentru a păstra.",
     "bodyTemplate": "Șablonul corpului (opțional)",

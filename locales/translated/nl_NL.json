@@ -133,7 +133,7 @@
     "webhookHint": "Ontvangt een JSON-body voor elke melding.",
     "method": "Methode",
     "headers": "Headers",
-    "headersHint": "Eén per regel, zoals Naam: waarde. Een opgeslagen waarde is verborgen; laat het leeg om deze te behouden.",
+    "headersHint": "Eén per regel, zoals Naam: waarde. Een opgeslagen waarde is verborgen; laat het leeg om het te behouden.",
     "savedKeep": "Opgeslagen. Laat leeg om het te behouden",
     "savedUrl": "Opgeslagen voor {{origin}}. Laat leeg om het te behouden",
     "bodyTemplate": "Lichaamssjabloon (optioneel)",

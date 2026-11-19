@@ -137,7 +137,7 @@
     "webhookHint": "Získá JSON tělo pro každé upozornění.",
     "method": "Metoda",
     "headers": "Hlavičky",
-    "headersHint": "Jeden na řádek, například Název: hodnota. Uložená hodnota je skrytá, nechte prázdné pro její zachování.",
+    "headersHint": "Jeden na řádek, ve formátu Název: hodnota. Uložená hodnota je skrytá, nechte prázdné pro zachování.",
     "savedKeep": "Uloženo. Nechte prázdné pro zachování.",
     "savedUrl": "Uloženo pro {{origin}}. Nechte prázdné pro zachování.",
     "bodyTemplate": "Šablona těla zprávy (volitelné)",

@@ -137,7 +137,7 @@
     "webhookHint": "Gaus JSON kūną kiekvienam pranešimui.",
     "method": "Metodas",
     "headers": "Antraštės",
-    "headersHint": "Po vieną eilutėje, pvz., Pavadinimas: reikšmė. Išsaugota reikšmė yra paslėpta, palikite tuščią, kad ją išsaugotumėte.",
+    "headersHint": "Po vieną eilutėje, pvz., Pavadinimas: reikšmė. Išsaugota reikšmė yra paslėpta, palikite tuščią, kad ją išlaikytumėte.",
     "savedKeep": "Išsaugota. Palikite tuščią, kad išlaikytumėte",
     "savedUrl": "Išsaugota „{{origin}}“. Palikite tuščią, kad išlaikytumėte",
     "bodyTemplate": "Turinio šablonas (nebūtinas)",

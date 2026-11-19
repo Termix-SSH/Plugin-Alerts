@@ -137,7 +137,7 @@
     "webhookHint": "Získa JSON telo pre každé upozornenie.",
     "method": "Metóda",
     "headers": "Hlavičky",
-    "headersHint": "Jeden na riadok, napr. Názov: hodnota. Uložená hodnota je skrytá, nechajte prázdne, ak ju chcete zachovať.",
+    "headersHint": "Jeden na riadok, napríklad Názov: hodnota. Uložená hodnota je skrytá, ak ju chcete ponechať, nechajte pole prázdne.",
     "savedKeep": "Uložené. Nechajte prázdne, aby ste to zachovali.",
     "savedUrl": "Uložené pre {{origin}}. Nechajte prázdne, aby ste to zachovali.",
     "bodyTemplate": "Šablóna tela (voliteľné)",

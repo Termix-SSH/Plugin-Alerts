@@ -131,7 +131,7 @@
     "webhookHint": "每次警报都会收到一个 JSON 请求体。",
     "method": "方法",
     "headers": "请求头",
-    "headersHint": "每行一个，格式如 Name: value。已保存的值会被隐藏，留空即可保留原值。",
+    "headersHint": "每行一个，格式为 Name: value。已保存的值会被隐藏，留空即可保留原值。",
     "savedKeep": "已保存。留空即可保留。",
     "savedUrl": "已为 {{origin}} 保存。留空即可保留。",
     "bodyTemplate": "正文模板（可选）",

@@ -131,7 +131,7 @@
     "webhookHint": "Menerima badan JSON untuk setiap amaran.",
     "method": "Kaedah",
     "headers": "Pengepala",
-    "headersHint": "Satu setiap baris, seperti Nama: nilai. Nilai yang disimpan adalah tersembunyi, biarkan kosong untuk mengekalkannya.",
+    "headersHint": "Satu setiap baris, seperti Nama: nilai. Nilai yang disimpan akan disembunyikan, biarkan kosong untuk mengekalkannya.",
     "savedKeep": "Disimpan. Biarkan kosong untuk mengekalkannya",
     "savedUrl": "Disimpan untuk {{origin}}. Biarkan kosong untuk mengekalkannya",
     "bodyTemplate": "Templat badan (pilihan)",

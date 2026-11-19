@@ -135,7 +135,7 @@
     "webhookHint": "Prima JSON tijelo za svaku obavijest.",
     "method": "Metoda",
     "headers": "Zaglavlja",
-    "headersHint": "Po jedan po retku, poput Naziv: vrijednost. Spremljena vrijednost je skrivena, ostavite prazno da je zadržite.",
+    "headersHint": "Po jedan po retku, poput Ime: vrijednost. Spremljena vrijednost je skrivena; ostavite prazno da je zadržite.",
     "savedKeep": "Spremljeno. Ostavite prazno da ga zadržite",
     "savedUrl": "Spremljeno za {{origin}}. Ostavite prazno da ga zadržite",
     "bodyTemplate": "Predložak tijela (opcionalno)",

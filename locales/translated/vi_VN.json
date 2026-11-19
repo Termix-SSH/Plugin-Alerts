@@ -131,7 +131,7 @@
     "webhookHint": "Nhận nội dung JSON cho mỗi cảnh báo.",
     "method": "Phương thức",
     "headers": "Headers",
-    "headersHint": "Mỗi dòng một mục, ví dụ: Tên: giá trị. Giá trị đã lưu sẽ bị ẩn, để trống để giữ nguyên.",
+    "headersHint": "Mỗi dòng một mục, theo định dạng Tên: giá trị. Giá trị đã lưu sẽ bị ẩn, hãy để trống để giữ nguyên.",
     "savedKeep": "Đã lưu. Để trống để giữ nguyên",
     "savedUrl": "Đã lưu cho {{origin}}. Để trống để giữ nguyên",
     "bodyTemplate": "Mẫu nội dung (tùy chọn)",

@@ -135,7 +135,7 @@
     "webhookHint": "Katram paziņojumam saņem JSON ķermeni.",
     "method": "Metode",
     "headers": "Galvenes",
-    "headersHint": "Pa vienam rindā, piemēram, Nosaukums: vērtība. Saglabāta vērtība ir paslēpta, atstājiet to tukšu, lai to saglabātu.",
+    "headersHint": "Viens rindā, piemēram, Nosaukums: vērtība. Saglabāta vērtība ir paslēpta, atstājiet tukšu, lai to saglabātu.",
     "savedKeep": "Saglabāts. Atstājiet tukšu, lai to saglabātu",
     "savedUrl": "Saglabāts priekš {{origin}}. Atstājiet tukšu, lai to saglabātu",
     "bodyTemplate": "Pamata veidne (neobligāts)",
