@@ -11,8 +11,10 @@
   "settings": {
     "group": {
       "general": "Generali",
-      "email": "Email"
+      "email": "Email",
+      "mobile": "App mobile"
     },
+    "mobileHint": "Un telefono collegato dall'app Termix. Disattivalo o modifica le notifiche che riceve nelle impostazioni dell'app.",
     "admin": {
       "announcements": {
         "label": "Annunci di Termix",

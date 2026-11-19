@@ -11,8 +11,10 @@
   "settings": {
     "group": {
       "general": "Bendra",
-      "email": "El. paštas"
+      "email": "El. paštas",
+      "mobile": "Mobilioji programėlė"
     },
+    "mobileHint": "Telefonas, susietas per „Termix“ programėlę. Išjunkite jį arba pakeiskite, kokius pranešimus jis gauna, programėlės nustatymuose.",
     "admin": {
       "announcements": {
         "label": "Termix pranešimai",
@@ -135,7 +137,7 @@
     "webhookHint": "Gaus JSON kūną kiekvienam pranešimui.",
     "method": "Metodas",
     "headers": "Antraštės",
-    "headersHint": "Po vieną eilutėje, pvz., Pavadinimas: reikšmė. Išsaugota reikšmė yra paslėpta, palikite tuščią, kad ją išlaikytumėte.",
+    "headersHint": "Po vieną eilutėje, pvz., Pavadinimas: reikšmė. Išsaugota reikšmė yra paslėpta, palikite tuščią, kad ją išsaugotumėte.",
     "savedKeep": "Išsaugota. Palikite tuščią, kad išlaikytumėte",
     "savedUrl": "Išsaugota „{{origin}}“. Palikite tuščią, kad išlaikytumėte",
     "bodyTemplate": "Turinio šablonas (nebūtinas)",

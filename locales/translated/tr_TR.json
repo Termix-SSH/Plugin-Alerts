@@ -11,8 +11,10 @@
   "settings": {
     "group": {
       "general": "Genel",
-      "email": "E-posta"
+      "email": "E-posta",
+      "mobile": "Mobil uygulama"
     },
+    "mobileHint": "Termix uygulamasından bağlanmış bir telefon. Uygulamanın ayarlarından bildirimleri kapatın veya hangi bildirimleri alacağını değiştirin.",
     "admin": {
       "announcements": {
         "label": "Termix duyuruları",
