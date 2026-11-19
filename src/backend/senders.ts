@@ -1,7 +1,14 @@
 import type { PluginFetch } from "@termix-ssh/plugin-sdk/backend";
-import type { AlertLink, ChannelType, Severity } from "../types.js";
+import {
+  PUSH_PLATFORMS,
+  type AlertLink,
+  type ChannelType,
+  type Severity,
+} from "../types.js";
 
 export interface OutgoingAlert {
+  /** The inbox item, so a tap on a phone can open it. */
+  itemId?: number;
   title: string;
   body: string;
   severity: Severity;
@@ -67,6 +74,17 @@ const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 const TELEGRAM_TOKEN = /^\d+:[A-Za-z0-9_-]+$/;
 const TELEGRAM_CHAT = /^(?:-?\d+|@[A-Za-z0-9_]{4,})$/;
+
+const EXPO_TOKEN = /^Expo(?:nent)?PushToken\[[^\]\s]{1,200}\]$/;
+export const EXPO_PUSH_URL = "https://exp.host/--/api/v2/push/send";
+
+/** Expo said the phone no longer takes pushes, so the channel should stop. */
+export class DeviceGoneError extends Error {
+  constructor() {
+    super("The phone is no longer registered for notifications");
+    this.name = "DeviceGoneError";
+  }
+}
 
 /** The values a webhook body template can use, as {{name}}. */
 export function templateValues(
@@ -167,6 +185,14 @@ export function validateChannelConfig(
       return DISCORD_WEBHOOK.test(str(config.url))
         ? null
         : "discord config requires a Discord webhook URL";
+    case "mobile":
+      if (!EXPO_TOKEN.test(str(config.token)))
+        return "mobile config requires an Expo push token";
+      return (PUSH_PLATFORMS as readonly string[]).includes(
+        str(config.platform),
+      )
+        ? null
+        : "mobile config requires a platform";
     case "email": {
       const to = parseRecipients(config.to);
       if (to.length === 0) return "email config requires at least one address";
@@ -215,6 +241,10 @@ export async function sendToChannel(
       text: [alert.body || alert.title, url].filter(Boolean).join("\n\n"),
     });
     return;
+  }
+
+  if (channel.type === "mobile") {
+    return sendPush(config, alert, deps);
   }
 
   const allowPrivateHosts =
@@ -331,6 +361,71 @@ export async function sendToChannel(
         body: JSON.stringify(payload),
       });
     }
+  }
+}
+
+/** The message Expo gets. Clipped so it stays under Expo's 4 KB limit. */
+export function pushMessage(
+  config: Record<string, unknown>,
+  alert: OutgoingAlert,
+): Record<string, unknown> {
+  const urgent = alert.severity === "critical" || alert.severity === "warning";
+  return {
+    to: str(config.token),
+    title: (alert.title || "Termix").slice(0, 150),
+    body: (alert.body || alert.title || "").slice(0, 1500),
+    sound: "default",
+    priority: urgent ? "high" : "normal",
+    channelId: alert.severity === "critical" ? "alerts-critical" : "alerts",
+    data: {
+      itemId: alert.itemId,
+      source: alert.source,
+      category: alert.category.slice(0, 128),
+      severity: alert.severity,
+      accountKey: str(config.accountKey) || undefined,
+      tab: alert.link?.tab,
+    },
+  };
+}
+
+async function sendPush(
+  config: Record<string, unknown>,
+  alert: OutgoingAlert,
+  deps: SenderDeps,
+): Promise<void> {
+  if (!str(config.token)) throw new Error("Phone is not set up");
+  const response = await deps.fetch(EXPO_PUSH_URL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", Accept: "application/json" },
+    body: JSON.stringify([pushMessage(config, alert)]),
+    timeoutMs: 30_000,
+  });
+  const text = await response.text().catch(() => "");
+  let reply: {
+    data?: Array<{
+      status?: string;
+      message?: string;
+      details?: { error?: string };
+    }>;
+    errors?: Array<{ message?: string }>;
+  } = {};
+  try {
+    reply = text ? JSON.parse(text) : {};
+  } catch {
+    // not JSON, the status below says enough
+  }
+  if (!response.ok) {
+    const detail = reply.errors?.[0]?.message ?? text.slice(0, 200);
+    throw new Error(
+      `HTTP ${response.status} ${response.statusText}${detail ? `: ${detail}` : ""}`,
+    );
+  }
+  const ticket = reply.data?.[0];
+  if (ticket?.status === "error") {
+    if (ticket.details?.error === "DeviceNotRegistered") {
+      throw new DeviceGoneError();
+    }
+    throw new Error(ticket.message || "The push service refused the alert");
   }
 }
 

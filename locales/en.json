@@ -11,8 +11,10 @@
   "settings": {
     "group": {
       "general": "General",
-      "email": "Email"
+      "email": "Email",
+      "mobile": "Mobile app"
     },
+    "mobileHint": "A phone linked from the Termix app. Turn it off or change which alerts it gets in the app's settings.",
     "admin": {
       "announcements": {
         "label": "Termix announcements",

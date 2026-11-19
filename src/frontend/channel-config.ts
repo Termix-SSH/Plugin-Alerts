@@ -14,6 +14,8 @@ export interface Draft {
   avatarUrl: string;
   to: string;
   allowPrivateNetwork: boolean;
+  /** A mobile channel's config as saved, sent back unchanged. */
+  mobile: Record<string, unknown>;
 }
 
 export const EMPTY: Draft = {
@@ -30,6 +32,7 @@ export const EMPTY: Draft = {
   avatarUrl: "",
   to: "",
   allowPrivateNetwork: false,
+  mobile: {},
 };
 
 const str = (value: unknown) => (typeof value === "string" ? value : "");
@@ -57,6 +60,7 @@ export function draftFrom(channel: ChannelDetail): Draft {
     avatarUrl: str(config.avatar_url),
     to: str(config.to),
     allowPrivateNetwork: config.allowPrivateNetwork === true,
+    mobile: channel.type === "mobile" ? { ...config } : {},
   };
 }
 
@@ -108,5 +112,7 @@ export function configFrom(draft: Draft): Record<string, unknown> {
       return { token: draft.token.trim(), chatId: draft.chatId.trim() };
     case "email":
       return { to: draft.to.trim() };
+    case "mobile":
+      return { ...draft.mobile };
   }
 }

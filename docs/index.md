@@ -1,4 +1,4 @@
-Alerts is the one inbox for everything in Termix that wants your attention: an automation that failed, a certificate that didn't renew, a new Termix release. It can also send alerts on to Discord, ntfy, email or any webhook.
+Alerts is the one inbox for everything in Termix that wants your attention: an automation that failed, a certificate that didn't renew, a new Termix release. It can also send alerts on to your phone, Discord, ntfy, email or any webhook.
 
 Other plugins send alerts. Alerts is where they land.
 
@@ -26,6 +26,12 @@ A channel is somewhere outside Termix an alert can go. Add them under Channels:
 | Email   | One or more addresses. An admin has to set up SMTP first.                           |
 
 Send a test checks a channel works.
+
+## Phone notifications
+
+In the Termix app, open Settings, Notifications and turn them on for a server. The phone shows up here as a Mobile app channel, with a rule named after the phone that sends warnings and worse to it. Change the lowest severity in the app, or edit the rule here to pick which alerts go to the phone. Turning it off in the app, or deleting the channel here, stops the notifications.
+
+Notifications go through Expo's push service and Apple or Google, and carry the alert's title and text. The F-Droid build has no Google services, so it checks for new alerts in the background instead, about every 15 minutes.
 
 Termix blocks sending to private network addresses by default. To send to something on your own network, like a self-hosted ntfy, an admin adds the host to Allowed private notification hosts in Settings, General, and you turn on Allow a private network address on the channel.
 

@@ -10,7 +10,7 @@ import {
   InlineView,
   FormFooter,
 } from "@termix-ssh/plugin-sdk/ui";
-import { CHANNEL_TYPES, type ChannelType } from "../types";
+import { CREATABLE_CHANNEL_TYPES, type ChannelType } from "../types";
 import { EMPTY, configFrom, draftFrom, type Draft } from "./channel-config";
 import type { AlertsApi } from "./api";
 
@@ -154,35 +154,46 @@ export function ChannelDialog({
           />
         </Field>
 
-        <Field label={t("channels.type")}>
-          <div className="flex flex-wrap gap-2">
-            {CHANNEL_TYPES.map((type) => {
-              const disabled = type === "email" && !emailAvailable;
-              return (
-                <button
-                  key={type}
-                  type="button"
-                  disabled={disabled}
-                  title={disabled ? t("channels.emailUnavailable") : undefined}
-                  onClick={() => pickType(type)}
-                  className={cn(
-                    "px-3 py-1 text-xs font-semibold border transition-colors disabled:opacity-40 disabled:cursor-not-allowed",
-                    draft.type === type
-                      ? "border-accent-brand/40 bg-accent-brand/10 text-accent-brand"
-                      : "border-border text-muted-foreground hover:border-accent-brand/30",
-                  )}
-                >
-                  {t(`channels.types.${type}`)}
-                </button>
-              );
-            })}
-          </div>
-          {draft.type === "email" && !emailAvailable && (
-            <span className="text-[10px] text-destructive">
-              {t("channels.emailUnavailable")}
+        {draft.type === "mobile" ? (
+          <Field label={t("channels.type")}>
+            <span className="text-sm">{t("channels.types.mobile")}</span>
+            <span className="text-[10px] text-muted-foreground">
+              {t("channels.mobileHint")}
             </span>
-          )}
-        </Field>
+          </Field>
+        ) : (
+          <Field label={t("channels.type")}>
+            <div className="flex flex-wrap gap-2">
+              {CREATABLE_CHANNEL_TYPES.map((type) => {
+                const disabled = type === "email" && !emailAvailable;
+                return (
+                  <button
+                    key={type}
+                    type="button"
+                    disabled={disabled}
+                    title={
+                      disabled ? t("channels.emailUnavailable") : undefined
+                    }
+                    onClick={() => pickType(type)}
+                    className={cn(
+                      "px-3 py-1 text-xs font-semibold border transition-colors disabled:opacity-40 disabled:cursor-not-allowed",
+                      draft.type === type
+                        ? "border-accent-brand/40 bg-accent-brand/10 text-accent-brand"
+                        : "border-border text-muted-foreground hover:border-accent-brand/30",
+                    )}
+                  >
+                    {t(`channels.types.${type}`)}
+                  </button>
+                );
+              })}
+            </div>
+            {draft.type === "email" && !emailAvailable && (
+              <span className="text-[10px] text-destructive">
+                {t("channels.emailUnavailable")}
+              </span>
+            )}
+          </Field>
+        )}
 
         {draft.type === "webhook" && (
           <>

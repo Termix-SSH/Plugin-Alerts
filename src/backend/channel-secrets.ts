@@ -7,6 +7,7 @@ const SECRET_FIELDS: Record<ChannelType, readonly string[]> = {
   telegram: ["token"],
   ntfy: ["token"],
   email: [],
+  mobile: ["token"],
 };
 
 function present(value: unknown): boolean {

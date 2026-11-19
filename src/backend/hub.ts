@@ -12,6 +12,7 @@ import {
 } from "../types.js";
 import type { AlertsRepository, DeliverableChannel } from "./repository.js";
 import {
+  DeviceGoneError,
   describeSendError,
   sendToChannel,
   type OutgoingAlert,
@@ -59,11 +60,15 @@ function cleanContext(context: unknown): Record<string, unknown> | null {
   }
 }
 
-/** Sends to each channel and reports how each one went. */
+/**
+ * Sends to each channel and reports how each one went. onGone hears about
+ * phones that no longer take pushes, so their channel can be turned off.
+ */
 export async function deliverToChannels(
   targets: DeliverableChannel[],
   alert: OutgoingAlert,
   senders: SenderDeps,
+  onGone?: (channelId: number) => Promise<void>,
 ): Promise<DeliveryResult[]> {
   const results: DeliveryResult[] = [];
   for (const channel of targets) {
@@ -84,6 +89,9 @@ export async function deliverToChannels(
       );
       results.push({ channelId: channel.id, name: channel.name, ok: true });
     } catch (error) {
+      if (error instanceof DeviceGoneError && onGone) {
+        await onGone(channel.id).catch(() => undefined);
+      }
       results.push({
         channelId: channel.id,
         name: channel.name,
@@ -152,8 +160,20 @@ export function createHub(deps: HubDeps): PluginNotifyHub {
 
     const deliveries = await deliverToChannels(
       targets,
-      { title, body, severity, category, source, link, context },
+      {
+        itemId: item.id,
+        title,
+        body,
+        severity,
+        category,
+        source,
+        link,
+        context,
+      },
       senders,
+      async (channelId) => {
+        await repository.updateChannel(userId, channelId, { enabled: false });
+      },
     );
     for (const delivery of deliveries) {
       if (delivery.ok) result.delivered++;
