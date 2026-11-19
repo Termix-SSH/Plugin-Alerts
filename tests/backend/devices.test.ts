@@ -146,13 +146,15 @@ describe("devices", () => {
     expect(
       (await server.request("GET", "/devices", { user: "bob" })).body,
     ).toEqual([]);
+    // Bob unlinking it is fine and leaves Alice's phone alone.
     expect(
       (
         await server.request("DELETE", "/devices/install-0001", {
           user: "bob",
         })
       ).status,
-    ).toBe(404);
+    ).toBe(200);
+    expect((await server.request("GET", "/devices")).body).toHaveLength(1);
     // Bob linking the same install id gets his own channel.
     await server.request("PUT", "/devices/install-0001", {
       user: "bob",
@@ -162,6 +164,46 @@ describe("devices", () => {
     expect(
       (await server.request("GET", "/channels", { user: "bob" })).body,
     ).toHaveLength(1);
+  });
+
+  it("unlinks every copy of a phone and is fine with unlinking twice", async () => {
+    server = await startServer();
+    await server.request("PUT", "/devices/install-0001", { body: PHONE });
+    const second = await server.request("PUT", "/devices/install-0002", {
+      body: PHONE,
+    });
+    // A second channel for the same phone, like 1.4.0-beta.1 could make.
+    await server.request("PUT", `/channels/${second.body.channelId}`, {
+      body: {
+        config: { platform: "android", installId: "install-0001", token: "" },
+      },
+    });
+    expect((await server.request("GET", "/devices")).body).toHaveLength(2);
+
+    expect(
+      (await server.request("DELETE", "/devices/install-0001")).status,
+    ).toBe(200);
+    expect((await server.request("GET", "/channels")).body).toEqual([]);
+    expect((await server.request("GET", "/rules")).body).toEqual([]);
+    expect(
+      (await server.request("DELETE", "/devices/install-0001")).status,
+    ).toBe(200);
+  });
+
+  it("linking again merges copies of the phone into one", async () => {
+    server = await startServer();
+    await server.request("PUT", "/devices/install-0001", { body: PHONE });
+    const second = await server.request("PUT", "/devices/install-0002", {
+      body: PHONE,
+    });
+    await server.request("PUT", `/channels/${second.body.channelId}`, {
+      body: {
+        config: { platform: "android", installId: "install-0001", token: "" },
+      },
+    });
+    await server.request("PUT", "/devices/install-0001", { body: PHONE });
+    expect((await server.request("GET", "/channels")).body).toHaveLength(1);
+    expect((await server.request("GET", "/rules")).body).toHaveLength(1);
   });
 
   it("only lets the app make mobile channels", async () => {

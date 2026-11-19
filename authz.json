@@ -119,7 +119,7 @@
       },
       "destructive": true,
       "allowed": "any",
-      "note": "No phone in the test data; only session, permission and unknown id refusals are checked"
+      "note": "Unlinking a phone that is not linked answers 200, so only session and permission refusals are checked"
     },
     "GET /plugin-api/alerts/items": {
       "access": "user",

@@ -751,11 +751,31 @@ export function registerRoutes(router: Router, deps: RouteDeps): void {
     res.json({ success: true });
   });
 
-  const findDevice = async (userId: string, installId: string) =>
-    (await repository.deliverableChannels(userId)).find(
+  const findDevices = async (userId: string, installId: string) =>
+    (await repository.deliverableChannels(userId)).filter(
       (channel) =>
         channel.type === "mobile" && channel.config?.installId === installId,
     );
+
+  /**
+   * Removes a phone's channels and their rules, plus phone rules left with
+   * no channel. 1.4.0-beta.1 could make a phone twice.
+   */
+  const removeDevices = async (
+    userId: string,
+    channels: Awaited<ReturnType<typeof findDevices>>,
+  ) => {
+    for (const channel of channels) {
+      const ruleId = positiveInt(channel.config?.ruleId);
+      if (ruleId) await repository.deleteRule(userId, ruleId);
+      await repository.deleteChannel(userId, channel.id);
+    }
+    for (const rule of await repository.listRules(userId)) {
+      if (rule.name.startsWith("Mobile: ") && rule.channelIds.length === 0) {
+        await repository.deleteRule(userId, rule.id);
+      }
+    }
+  };
 
   const rulesById = async (userId: string) =>
     new Map(
@@ -878,7 +898,8 @@ export function registerRoutes(router: Router, deps: RouteDeps): void {
 
     // The app can send several at once; one at a time keeps one channel and rule.
     const device = await oneAtATime(`${userId}:${installId}`, async () => {
-      const existing = await findDevice(userId, installId);
+      const [existing, ...copies] = await findDevices(userId, installId);
+      if (copies.length > 0) await removeDevices(userId, copies);
       let channelId: number;
       if (existing) {
         channelId = existing.id;
@@ -942,7 +963,7 @@ export function registerRoutes(router: Router, deps: RouteDeps): void {
    * /plugin-api/alerts/devices/{installId}:
    *   delete:
    *     summary: Unlink a phone
-   *     description: Removes its mobile channel and its rule.
+   *     description: Removes its mobile channel and its rule. Answers 200 when the phone was already gone.
    *     tags:
    *       - Alerts
    *     parameters:
@@ -953,20 +974,20 @@ export function registerRoutes(router: Router, deps: RouteDeps): void {
    *           type: string
    *     responses:
    *       200:
-   *         description: Removed.
-   *       404:
-   *         description: No such phone for the caller.
+   *         description: Removed, or was not linked.
+   *       400:
+   *         description: The install id is not valid.
    */
   router.delete("/devices/:installId", async (req: Request, res: Response) => {
     const userId = actor(ctx);
     const installId = String(req.params.installId ?? "");
-    const device = INSTALL_ID.test(installId)
-      ? await findDevice(userId, installId)
-      : undefined;
-    if (!device) return res.status(404).json({ error: "Device not found" });
-    const ruleId = positiveInt(device.config?.ruleId);
-    if (ruleId) await repository.deleteRule(userId, ruleId);
-    await repository.deleteChannel(userId, device.id);
+    if (!INSTALL_ID.test(installId)) {
+      return res.status(400).json({ error: "installId is not valid" });
+    }
+    // Unlinking twice is fine: the phone only wants to be gone.
+    await oneAtATime(`${userId}:${installId}`, async () =>
+      removeDevices(userId, await findDevices(userId, installId)),
+    );
     res.json({ success: true });
   });
 }
