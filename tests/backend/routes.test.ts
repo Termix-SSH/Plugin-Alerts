@@ -149,7 +149,18 @@ describe("channels", () => {
     server = await startServer();
     expect((await server.request("GET", "/meta")).body).toEqual({
       emailAvailable: false,
-      channelTypes: ["webhook", "ntfy", "discord", "telegram", "email"],
+      channelTypes: [
+        "webhook",
+        "ntfy",
+        "discord",
+        "telegram",
+        "slack",
+        "teams",
+        "gotify",
+        "pushover",
+        "matrix",
+        "email",
+      ],
     });
     await server.mock.ctx.settings.set("smtpHost", "smtp.example");
     await server.mock.ctx.settings.set("smtpFrom", "alerts@example.com");

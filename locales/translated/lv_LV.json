@@ -11,8 +11,10 @@
   "settings": {
     "group": {
       "general": "Vispārīgi",
-      "email": "E-pasts"
+      "email": "E-pasts",
+      "mobile": "Mobilā lietotne"
     },
+    "mobileHint": "Tālrunis, kas saistīts no Termix lietotnes. Izslēdziet to vai mainiet, kādus paziņojumus tas saņem, lietotnes iestatījumos.",
     "admin": {
       "announcements": {
         "label": "Termix paziņojumi",
@@ -126,6 +128,11 @@
       "ntfy": "ntfy",
       "discord": "Discord",
       "telegram": "Telegram",
+      "slack": "Slack",
+      "teams": "Teams",
+      "gotify": "Gotify",
+      "pushover": "Pushover",
+      "matrix": "Matrix",
       "email": "E-pasts"
     },
     "emailUnavailable": "E-pastam nepieciešams SMTP serveris, ko administrators iestatīja Paziņojumu iestatījumos.",
@@ -133,7 +140,7 @@
     "webhookHint": "Katram paziņojumam saņem JSON ķermeni.",
     "method": "Metode",
     "headers": "Galvenes",
-    "headersHint": "Viena rindā, piemēram, Nosaukums: vērtība. Saglabāta vērtība ir paslēpta, atstājiet tukšu, lai to saglabātu.",
+    "headersHint": "Viens rindā, piemēram, Nosaukums: vērtība. Saglabāta vērtība ir paslēpta, atstājiet tukšu, lai to saglabātu.",
     "savedKeep": "Saglabāts. Atstājiet tukšu, lai to saglabātu",
     "savedUrl": "Saglabāts priekš {{origin}}. Atstājiet tukšu, lai to saglabātu",
     "bodyTemplate": "Pamata veidne (neobligāts)",
@@ -145,6 +152,22 @@
     "ntfyServer": "Servera URL",
     "ntfyTopic": "Tēma",
     "ntfyToken": "Piekļuves tokens (neobligāts)",
+    "slackUrl": "Slack webhook URL",
+    "slackHint": "Pievienojiet savam Slack darbvietai Incoming Webhooks lietotni un izvēlieties kanālu.",
+    "teamsUrl": "Teams workflow URL",
+    "teamsHint": "Teams kanālā pievienojiet darbplūsmu \"Post to a channel when a webhook request is received\" un ielīmējiet tās URL.",
+    "gotifyServer": "Servera URL",
+    "gotifyToken": "Lietotnes žetons",
+    "gotifyTokenHint": "Izveidojiet lietotni Gotify sadaļā Apps un ielīmējiet tās žetonu.",
+    "pushoverToken": "Lietotnes žetons",
+    "pushoverTokenHint": "Izveidojiet lietotni vietnē pushover.net un ielīmējiet tās API žetonu.",
+    "pushoverUser": "Lietotāja vai grupas atslēga",
+    "pushoverUserHint": "Rādīts jūsu pushover.net panelī.",
+    "matrixServer": "Homeserver URL",
+    "matrixRoom": "Istabas ID",
+    "matrixRoomHint": "Istabas iestatījumi, Papildu, piemēram, !abcdef:matrix.org. Vispirms uzaiciniet botu kontu istabā.",
+    "matrixToken": "Piekļuves žetons",
+    "matrixTokenHint": "Konta, kas publicē ziņojumus, piekļuves žetons. Izmantojiet atsevišķu botu kontu.",
     "discordUrl": "Discord webhook URL",
     "discordHint": "No kanāla iestatījumiem Discord, sadaļā Integrācijas.",
     "discordUsername": "Attāmajā vārdā (neobligāts)",

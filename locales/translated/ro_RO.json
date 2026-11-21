@@ -11,8 +11,10 @@
   "settings": {
     "group": {
       "general": "General",
-      "email": "Email"
+      "email": "Email",
+      "mobile": "Aplicație mobilă"
     },
+    "mobileHint": "Un telefon conectat din aplicația Termix. Dezactivați-l sau modificați ce alerte primește în setările aplicației.",
     "admin": {
       "announcements": {
         "label": "Anunțuri Termix",
@@ -126,6 +128,11 @@
       "ntfy": "ntfy",
       "discord": "Discord",
       "telegram": "Telegram",
+      "slack": "Slack",
+      "teams": "Teams",
+      "gotify": "Gotify",
+      "pushover": "Pushover",
+      "matrix": "Matrix",
       "email": "Email"
     },
     "emailUnavailable": "Email necesită un server SMTP, configurat de un administrator în setările de Alertă.",
@@ -133,7 +140,7 @@
     "webhookHint": "Primește un corp JSON pentru fiecare alertă.",
     "method": "Metodă",
     "headers": "Antete",
-    "headersHint": "Câte unul pe linie, de tipul Nume: valoare. O valoare salvată este ascunsă; lăsați gol pentru a o păstra.",
+    "headersHint": "Câte unul pe linie, de genul Nume: valoare. O valoare salvată este ascunsă; lăsați câmpul gol pentru a o păstra.",
     "savedKeep": "Salvat. Lăsați gol pentru a păstra.",
     "savedUrl": "Salvat pentru {{origin}}. Lăsați gol pentru a păstra.",
     "bodyTemplate": "Șablonul corpului (opțional)",
@@ -145,6 +152,22 @@
     "ntfyServer": "URL server",
     "ntfyTopic": "Subiect",
     "ntfyToken": "Token de acces (opțional)",
+    "slackUrl": "URL webhook Slack",
+    "slackHint": "Adăugați o aplicație Incoming Webhooks în spațiul de lucru Slack și selectați un canal.",
+    "teamsUrl": "URL workflow Teams",
+    "teamsHint": "În canalul Teams, adăugați workflow-ul „Post to a channel when a webhook request is received” și lipiți URL-ul său.",
+    "gotifyServer": "URL server",
+    "gotifyToken": "Token aplicație",
+    "gotifyTokenHint": "Creați o aplicație în Gotify, la secțiunea Apps, și lipiți token-ul său.",
+    "pushoverToken": "Token aplicație",
+    "pushoverTokenHint": "Creați o aplicație pe pushover.net și lipiți token-ul API.",
+    "pushoverUser": "Cheie utilizator sau grup",
+    "pushoverUserHint": "Afișată pe panoul de control pushover.net.",
+    "matrixServer": "URL homeserver",
+    "matrixRoom": "ID cameră",
+    "matrixRoomHint": "Setări cameră, Avansat, de genul !abcdef:matrix.org. Invitați mai întâi contul bot în cameră.",
+    "matrixToken": "Token de acces",
+    "matrixTokenHint": "Token-ul de acces al contului care postează. Folosiți un cont bot separat.",
     "discordUrl": "URL webhook Discord",
     "discordHint": "Din setările canalului în Discord, la Integrations.",
     "discordUsername": "Nume afișat (opțional)",

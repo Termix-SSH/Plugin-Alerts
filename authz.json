@@ -94,6 +94,33 @@
       "permission": "alerts.use",
       "destructive": true
     },
+    "GET /plugin-api/alerts/devices": {
+      "access": "user",
+      "permission": "alerts.use"
+    },
+    "PUT /plugin-api/alerts/devices/:installId": {
+      "access": "user",
+      "permission": "alerts.use",
+      "params": {
+        "installId": "=authz-phone-1"
+      },
+      "body": {
+        "token": "ExponentPushToken[authz]",
+        "platform": "android",
+        "name": "authz-phone"
+      },
+      "note": "Each user links phones under their own account, so a matching install id from another user makes a separate channel"
+    },
+    "DELETE /plugin-api/alerts/devices/:installId": {
+      "access": "user",
+      "permission": "alerts.use",
+      "params": {
+        "installId": "=authz-none-1"
+      },
+      "destructive": true,
+      "allowed": "any",
+      "note": "Unlinking a phone that is not linked answers 200, so only session and permission refusals are checked"
+    },
     "GET /plugin-api/alerts/items": {
       "access": "user",
       "permission": "alerts.use"

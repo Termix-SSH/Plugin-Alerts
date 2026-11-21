@@ -11,8 +11,10 @@
   "settings": {
     "group": {
       "general": "Splošno",
-      "email": "E-pošta"
+      "email": "E-pošta",
+      "mobile": "Mobilna aplikacija"
     },
+    "mobileHint": "Telefon, povezan iz aplikacije Termix. V nastavitvah aplikacije ga lahko izklopite ali spremenite, katere obvestila bo prejemal.",
     "admin": {
       "announcements": {
         "label": "Obvestila Termix",
@@ -128,6 +130,11 @@
       "ntfy": "ntfy",
       "discord": "Discord",
       "telegram": "Telegram",
+      "slack": "Slack",
+      "teams": "Teams",
+      "gotify": "Gotify",
+      "pushover": "Pushover",
+      "matrix": "Matrix",
       "email": "E-pošta"
     },
     "emailUnavailable": "E-pošta zahteva strežnik SMTP, ki ga skrbnik nastavi v nastavitvah opozoril.",
@@ -147,6 +154,22 @@
     "ntfyServer": "URL strežnika",
     "ntfyTopic": "Tema",
     "ntfyToken": "Žeton za dostop (neobvezno)",
+    "slackUrl": "URL Slack webhooka",
+    "slackHint": "V delovno okolje Slack dodajte aplikacijo Incoming Webhooks in izberite kanal.",
+    "teamsUrl": "URL Teams workflowa",
+    "teamsHint": "V kanalu Teams dodajte delovni tok »Post to a channel when a webhook request is received« in prilepite njegov URL.",
+    "gotifyServer": "URL strežnika",
+    "gotifyToken": "Žeton aplikacije",
+    "gotifyTokenHint": "V Gotify pod Aplikacije ustvarite aplikacijo in prilepite njen žeton.",
+    "pushoverToken": "Žeton aplikacije",
+    "pushoverTokenHint": "Na pushover.net ustvarite aplikacijo in prilepite njen API žeton.",
+    "pushoverUser": "Ključ uporabnika ali skupine",
+    "pushoverUserHint": "Prikazano na nadzorni plošči pushover.net.",
+    "matrixServer": "URL domačega strežnika",
+    "matrixRoom": "ID sobe",
+    "matrixRoomHint": "Nastavitve sobe, Napredno, kot !abcdef:matrix.org. Najprej povabite račun bot v sobo.",
+    "matrixToken": "Dostopni žeton",
+    "matrixTokenHint": "Dostopni žeton računa, ki objavlja. Uporabite ločen račun bot.",
     "discordUrl": "URL webhoka za Discord",
     "discordHint": "Iz nastavitev kanala v Discordu, pod Integracije.",
     "discordUsername": "Prikazno ime (neobvezno)",

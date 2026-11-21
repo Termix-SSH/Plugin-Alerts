@@ -11,8 +11,10 @@
   "settings": {
     "group": {
       "general": "Algemeen",
-      "email": "E-mail"
+      "email": "E-mail",
+      "mobile": "Mobiele app"
     },
+    "mobileHint": "Een telefoon gekoppeld vanuit de Termix-app. Schakel deze uit of wijzig welke meldingen deze ontvangt in de instellingen van de app.",
     "admin": {
       "announcements": {
         "label": "Termix-berichten",
@@ -124,6 +126,11 @@
       "ntfy": "ntfy",
       "discord": "Discord",
       "telegram": "Telegram",
+      "slack": "Slack",
+      "teams": "Teams",
+      "gotify": "Gotify",
+      "pushover": "Pushover",
+      "matrix": "Matrix",
       "email": "E-mail"
     },
     "emailUnavailable": "E-mail vereist een SMTP-server, die een beheerder instelt in de instellingen voor Meldingen.",
@@ -143,6 +150,22 @@
     "ntfyServer": "Server-URL",
     "ntfyTopic": "Onderwerp",
     "ntfyToken": "Toegangstoken (optioneel)",
+    "slackUrl": "Slack webhook-URL",
+    "slackHint": "Voeg een Incoming Webhooks-app toe aan je Slack-werkruimte en kies een kanaal.",
+    "teamsUrl": "Teams-workflow-URL",
+    "teamsHint": "Voeg in het Teams-kanaal de workflow 'Post naar een kanaal wanneer een webhook-verzoek wordt ontvangen' toe en plak de URL.",
+    "gotifyServer": "Server-URL",
+    "gotifyToken": "App-token",
+    "gotifyTokenHint": "Maak een app aan in Gotify onder Apps en plak het token.",
+    "pushoverToken": "Applicatietoken",
+    "pushoverTokenHint": "Maak een applicatie aan op pushover.net en plak het API-token.",
+    "pushoverUser": "Gebruikers- of groepssleutel",
+    "pushoverUserHint": "Getoond op je pushover.net-dashboard.",
+    "matrixServer": "Homeserver-URL",
+    "matrixRoom": "Kamer-ID",
+    "matrixRoomHint": "Kamerinstellingen, Geavanceerd, zoals !abcdef:matrix.org. Nodig eerst het bot-account uit in de kamer.",
+    "matrixToken": "Toegangstoken",
+    "matrixTokenHint": "Het toegangstoken van het account dat berichten plaatst. Gebruik een apart bot-account.",
     "discordUrl": "Discord webhook-URL",
     "discordHint": "Te vinden in de kanaalinstellingen van Discord, onder Integraties.",
     "discordUsername": "Weergavenaam (optioneel)",

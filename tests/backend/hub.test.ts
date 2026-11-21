@@ -27,6 +27,42 @@ const inbox = async (s: TestServer, user = "alice") =>
   (await s.request("GET", "/items", { user })).body;
 
 describe("the alert hub", () => {
+  it("tells other plugins when an alert is stored, once per person", async () => {
+    server = await startServer();
+    const notification = {
+      title: "Site down",
+      category: "uptime.down",
+      severity: "critical" as const,
+      dedupeKey: "uptime:web:down",
+      context: { hostId: 7, sourceName: "web" },
+    };
+    await server.hub.deliver({
+      source: "uptime",
+      recipients: ["alice", "bob"],
+      notification,
+    });
+    // A repeat of an unread alert is dropped, so nobody hears it again.
+    await server.hub.deliver({
+      source: "uptime",
+      recipients: ["alice"],
+      notification,
+    });
+    const fired = server.mock.emitted.filter(
+      (e) => e.topic === "plugin.alerts.fired",
+    );
+    expect(fired.map((e) => e.payload)).toEqual([
+      expect.objectContaining({
+        userId: "alice",
+        source: "uptime",
+        category: "uptime.down",
+        severity: "critical",
+        title: "Site down",
+        hostId: 7,
+      }),
+      expect.objectContaining({ userId: "bob", hostId: 7 }),
+    ]);
+  });
+
   it("puts an alert in each recipient's inbox with safe defaults", async () => {
     server = await startServer();
     const result = await server.hub.deliver({
